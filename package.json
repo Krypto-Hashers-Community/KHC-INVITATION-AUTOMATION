@@ -1,0 +1,14 @@
+{
+  "name": "invites-to-org",
+  "version": "1.0.0",
+  "description": "Automatically invite GitHub followers to your organization",
+  "main": "scripts/inviteFollowers.js",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/inviteFollowers.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.4.1"
+  }
+} 
