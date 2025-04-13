@@ -50,6 +50,19 @@ function canSendMoreInvites() {
   return invitationStats.last24Hours < 50;
 }
 
+// Load previously invited users
+function getPreviouslyInvitedUsers() {
+  if (!fs.existsSync(LOG_FILE)) return new Set();
+  
+  const logContent = fs.readFileSync(LOG_FILE, 'utf8');
+  return new Set(
+    logContent
+      .split('\n')
+      .filter(line => line.trim())
+      .map(line => line.split(' - ')[1])
+  );
+}
+
 if (!GITHUB_TOKEN) {
   console.error('❌ Error: GITHUB_TOKEN not found in environment');
   console.error('Please make sure you have added your token to the .env file');
@@ -97,10 +110,10 @@ async function getFollowers(username) {
   return allFollowers;
 }
 
-async function getOrgFollowers() {
-  console.log(`📥 Fetching followers of ${ORG}...`);
+async function getOrgFollowers(orgName) {
+  console.log(`📥 Fetching followers of ${orgName}...`);
   // First get the organization's members
-  const membersRes = await fetch(`https://api.github.com/orgs/${ORG}/members?per_page=100`, { headers });
+  const membersRes = await fetch(`https://api.github.com/orgs/${orgName}/members?per_page=100`, { headers });
   if (!membersRes.ok) {
     const error = await membersRes.json();
     console.error('❌ Failed to fetch org members:', error.message);
@@ -109,7 +122,7 @@ async function getOrgFollowers() {
   const members = await membersRes.json();
   
   // Then get the organization's repositories
-  const reposRes = await fetch(`https://api.github.com/orgs/${ORG}/repos?per_page=100`, { headers });
+  const reposRes = await fetch(`https://api.github.com/orgs/${orgName}/repos?per_page=100`, { headers });
   if (!reposRes.ok) {
     const error = await reposRes.json();
     console.error('❌ Failed to fetch org repos:', error.message);
@@ -124,7 +137,7 @@ async function getOrgFollowers() {
     let hasMore = true;
     
     while (hasMore) {
-      const starsRes = await fetch(`https://api.github.com/repos/${ORG}/${repo.name}/stargazers?per_page=100&page=${page}`, { headers });
+      const starsRes = await fetch(`https://api.github.com/repos/${orgName}/${repo.name}/stargazers?per_page=100&page=${page}`, { headers });
       if (starsRes.ok) {
         const stargazers = await starsRes.json();
         stargazers.forEach(user => followers.add(user.login));
@@ -151,9 +164,9 @@ async function getOrgFollowers() {
   return followersArray;
 }
 
-async function getOrgMembers() {
-  console.log(`📥 Fetching members of ${ORG}...`);
-  const res = await fetch(`https://api.github.com/orgs/${ORG}/members`, { headers });
+async function getOrgMembers(orgName) {
+  console.log(`📥 Fetching members of ${orgName}...`);
+  const res = await fetch(`https://api.github.com/orgs/${orgName}/members`, { headers });
   
   if (!res.ok) {
     const error = await res.json();
@@ -180,14 +193,14 @@ async function getUserId(username) {
   return data.id;
 }
 
-async function inviteUser(username, sourceUsername) {
-  if (!canSendMoreInvites()) {
-    console.log(`⚠️ Reached daily invitation limit (50). Please try again tomorrow.`);
+async function inviteUser(username, sourceUsername, targetOrg, forceInvite = false) {
+  if (!forceInvite && !canSendMoreInvites()) {
+    console.log(`⚠️ Reached daily invitation limit (50). Use force option to bypass this limit.`);
     return false;
   }
 
-  console.log(`📨 Inviting @${username} to ${ORG}...`);
-  const res = await fetch(`https://api.github.com/orgs/${ORG}/invitations`, {
+  console.log(`📨 Inviting @${username} to ${targetOrg}...`);
+  const res = await fetch(`https://api.github.com/orgs/${targetOrg}/invitations`, {
     method: 'POST',
     headers,
     body: JSON.stringify({ invitee_id: await getUserId(username) })
@@ -213,55 +226,167 @@ async function inviteUser(username, sourceUsername) {
   }
 }
 
+async function validateOrg(orgUrl) {
+  try {
+    // Extract org name from URL or use as-is if it's just the name
+    let orgName = orgUrl;
+    if (orgUrl.includes('github.com')) {
+      // Handle both https://github.com/org-name and github.com/org-name
+      orgName = orgUrl.split('github.com/').pop().split('/')[0];
+    }
+    
+    console.log(`🔍 Validating organization: ${orgName}`);
+    const res = await fetch(`https://api.github.com/orgs/${orgName}`, { headers });
+    if (res.ok) {
+      return { valid: true, orgName };
+    }
+    return { valid: false, orgName: null };
+  } catch (error) {
+    return { valid: false, orgName: null };
+  }
+}
+
+async function validateUser(userIdentifier) {
+  try {
+    // Check if input is an email
+    const isEmail = userIdentifier.includes('@');
+    let apiUrl = isEmail 
+      ? `https://api.github.com/search/users?q=${encodeURIComponent(userIdentifier)}+in:email`
+      : `https://api.github.com/users/${userIdentifier}`;
+
+    const res = await fetch(apiUrl, { headers });
+    const data = await res.json();
+
+    if (!res.ok) {
+      return { valid: false, username: null };
+    }
+
+    // For email search, check if we found any user
+    if (isEmail) {
+      if (data.total_count === 0) {
+        return { valid: false, username: null };
+      }
+      return { valid: true, username: data.items[0].login };
+    }
+
+    // For direct username lookup
+    return { valid: true, username: data.login };
+  } catch (error) {
+    return { valid: false, username: null };
+  }
+}
+
 async function main() {
   try {
     console.log('🤖 KHC Invitation Bot');
     console.log('📝 Configuration:');
-    console.log(`   Organization: ${ORG}`);
     console.log('   GitHub Token: ✅ Present');
     console.log('\n📊 Current Stats:');
     console.log(`   Total Invites Sent: ${invitationStats.totalInvites}`);
     console.log(`   Invites in Last 24h: ${invitationStats.last24Hours}`);
     console.log(`   Pending Invites: ${invitationStats.pendingInvites}\n`);
 
-    console.log('Please choose an option:');
+    // Load previously invited users
+    const previouslyInvited = getPreviouslyInvitedUsers();
+    console.log(`📋 Previously invited users: ${previouslyInvited.size}`);
+
+    console.log('\nPlease choose an option:');
     console.log('1. Invite followers of a specific user');
-    console.log('2. Invite followers of the organization');
+    console.log('2. Invite followers of an organization');
+    console.log('3. Invite a single user (by username or email)');
 
     const answer = await new Promise(resolve => {
-      rl.question('Enter your choice (1 or 2): ', resolve);
+      rl.question('Enter your choice (1, 2 or 3): ', resolve);
     });
 
     let followers;
     let sourceUsername;
+    let targetOrg = ORG;
+
     if (answer === '1') {
       sourceUsername = await new Promise(resolve => {
         rl.question('Enter the GitHub username: ', resolve);
       });
       followers = await getFollowers(sourceUsername);
     } else if (answer === '2') {
-      sourceUsername = ORG;
-      followers = await getOrgFollowers();
+      console.log('\nChoose organization option:');
+      console.log('1. Krypto-Hashers-Community (KHC)');
+      console.log('2. Different organization');
+      
+      const orgChoice = await new Promise(resolve => {
+        rl.question('Enter your choice (1 or 2): ', resolve);
+      });
+
+      if (orgChoice === '2') {
+        let isValidOrg = false;
+        let orgName = null;
+        while (!isValidOrg) {
+          const orgUrl = await new Promise(resolve => {
+            rl.question('Enter the organization URL (e.g., "https://github.com/organization-name"): ', resolve);
+          });
+          
+          console.log('🔍 Validating organization...');
+          const validation = await validateOrg(orgUrl);
+          isValidOrg = validation.valid;
+          orgName = validation.orgName;
+          
+          if (!isValidOrg) {
+            console.log('❌ Invalid organization URL. Please try again.');
+            console.log('   Make sure the URL is in the format: https://github.com/organization-name');
+          }
+        }
+        targetOrg = orgName;
+      }
+      
+      sourceUsername = targetOrg;
+      followers = await getOrgFollowers(targetOrg);
+    } else if (answer === '3') {
+      let isValidUser = false;
+      let username = null;
+      while (!isValidUser) {
+        const userIdentifier = await new Promise(resolve => {
+          rl.question('Enter GitHub username or email: ', resolve);
+        });
+        
+        console.log('🔍 Validating user...');
+        const validation = await validateUser(userIdentifier);
+        isValidUser = validation.valid;
+        username = validation.username;
+        
+        if (!isValidUser) {
+          console.log('❌ Invalid user. Please try again.');
+          console.log('   Make sure to enter a valid GitHub username or email');
+        }
+      }
+      
+      sourceUsername = 'manual-invite';
+      followers = [username];
     } else {
-      console.error('❌ Invalid choice. Please enter 1 or 2.');
+      console.error('❌ Invalid choice. Please enter 1, 2, or 3.');
       process.exit(1);
     }
 
-    const members = await getOrgMembers();
-    const newFollowers = followers.filter(user => !members.includes(user));
+    const members = await getOrgMembers(targetOrg);
+    const newFollowers = followers.filter(user => 
+      !members.includes(user) && !previouslyInvited.has(user)
+    );
     
     if (newFollowers.length === 0) {
       console.log('✨ No new followers to invite!');
       return;
     }
 
-    console.log(`\n🎯 Found ${newFollowers.length} followers to invite:`);
+    console.log(`\n🎯 Found ${newFollowers.length} new user${newFollowers.length === 1 ? '' : 's'} to invite:`);
     for (const user of newFollowers) {
       console.log(`   • @${user}`);
     }
 
+    if (followers.length - newFollowers.length > 0) {
+      console.log(`\n⚠️ Skipping ${followers.length - newFollowers.length} previously invited users`);
+    }
+
     const confirm = await new Promise(resolve => {
-      rl.question('\nDo you want to proceed with sending invites? (yes/no): ', resolve);
+      rl.question(`\nDo you want to proceed with sending invites to ${targetOrg}? (yes/no): `, resolve);
     });
 
     if (confirm.toLowerCase() !== 'yes') {
@@ -269,9 +394,13 @@ async function main() {
       return;
     }
 
+    const forceInvite = await new Promise(resolve => {
+      rl.question('Do you want to force send invites (bypass 50 limit)? (yes/no): ', resolve);
+    });
+
     let successfulInvites = 0;
     for (const user of newFollowers) {
-      if (await inviteUser(user, sourceUsername)) {
+      if (await inviteUser(user, sourceUsername, targetOrg, forceInvite.toLowerCase() === 'yes')) {
         successfulInvites++;
         // Add delay between invites
         await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_INVITES));
