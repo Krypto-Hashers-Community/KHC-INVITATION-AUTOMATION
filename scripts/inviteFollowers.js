@@ -276,6 +276,40 @@ async function validateUser(userIdentifier) {
   }
 }
 
+async function searchUsersByKeyword(keyword) {
+  console.log(`🔍 Searching users with keyword: "${keyword}"...`);
+  let allUsers = [];
+  let page = 1;
+  let hasMore = true;
+
+  while (hasMore) {
+    const res = await fetch(
+      `https://api.github.com/search/users?q=${encodeURIComponent(keyword)}&per_page=100&page=${page}`,
+      { headers }
+    );
+    
+    if (!res.ok) {
+      const error = await res.json();
+      console.error('❌ Failed to search users:', error.message);
+      process.exit(1);
+    }
+
+    const data = await res.json();
+    allUsers = allUsers.concat(data.items.map(user => user.login));
+    
+    // Check if there are more pages
+    const linkHeader = res.headers.get('link');
+    if (!linkHeader || !linkHeader.includes('rel="next"')) {
+      hasMore = false;
+    } else {
+      page++;
+    }
+  }
+
+  console.log(`✅ Found ${allUsers.length} users matching "${keyword}"`);
+  return allUsers;
+}
+
 async function main() {
   try {
     console.log('🤖 KHC Invitation Bot');
@@ -294,9 +328,10 @@ async function main() {
     console.log('1. Invite followers of a specific user');
     console.log('2. Invite followers of an organization');
     console.log('3. Invite a single user (by username or email)');
+    console.log('4. Search and invite users by keyword');
 
     const answer = await new Promise(resolve => {
-      rl.question('Enter your choice (1, 2 or 3): ', resolve);
+      rl.question('Enter your choice (1, 2, 3 or 4): ', resolve);
     });
 
     let followers;
@@ -361,8 +396,15 @@ async function main() {
       
       sourceUsername = 'manual-invite';
       followers = [username];
+    } else if (answer === '4') {
+      const keyword = await new Promise(resolve => {
+        rl.question('Enter search keyword (e.g., "SRM University"): ', resolve);
+      });
+      
+      sourceUsername = `search-${keyword}`;
+      followers = await searchUsersByKeyword(keyword);
     } else {
-      console.error('❌ Invalid choice. Please enter 1, 2, or 3.');
+      console.error('❌ Invalid choice. Please enter 1, 2, 3, or 4.');
       process.exit(1);
     }
 
