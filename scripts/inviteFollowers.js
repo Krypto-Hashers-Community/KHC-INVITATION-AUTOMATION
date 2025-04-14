@@ -10,6 +10,7 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const LOG_FILE = 'invitation_log.txt';
 const INVITATION_STATS_FILE = 'invitation_stats.json';
 const DELAY_BETWEEN_INVITES = 2000; // 2 seconds delay between invites
+const SEARCH_PROGRESS_FILE = 'search_progress.json';
 
 // Ensure log files exist
 if (!fs.existsSync(LOG_FILE)) {
@@ -61,6 +62,27 @@ function getPreviouslyInvitedUsers() {
       .filter(line => line.trim())
       .map(line => line.split(' - ')[1])
   );
+}
+
+// Load or initialize search progress
+let searchProgress = {
+  lastSearch: null,
+  completedCount: 0,
+  totalCount: 0,
+  remainingUsers: []
+};
+
+if (fs.existsSync(SEARCH_PROGRESS_FILE)) {
+  try {
+    searchProgress = JSON.parse(fs.readFileSync(SEARCH_PROGRESS_FILE, 'utf8'));
+  } catch (error) {
+    console.error('Error loading search progress:', error);
+  }
+}
+
+// Update search progress file
+function updateSearchProgress() {
+  fs.writeFileSync(SEARCH_PROGRESS_FILE, JSON.stringify(searchProgress, null, 2));
 }
 
 if (!GITHUB_TOKEN) {
@@ -276,13 +298,36 @@ async function validateUser(userIdentifier) {
   }
 }
 
-async function searchUsersByKeyword(keyword) {
+async function searchUsersByKeyword(keyword, startFrom = 0) {
   console.log(`🔍 Searching users with keyword: "${keyword}"...`);
   let allUsers = [];
   let page = 1;
   let hasMore = true;
+  let totalCount = 0;
 
-  while (hasMore) {
+  // First get total count
+  const initialRes = await fetch(
+    `https://api.github.com/search/users?q=${encodeURIComponent(keyword)}&per_page=1`,
+    { headers }
+  );
+  
+  if (!initialRes.ok) {
+    const error = await initialRes.json();
+    console.error('❌ Failed to search users:', error.message);
+    process.exit(1);
+  }
+
+  const initialData = await initialRes.json();
+  totalCount = initialData.total_count;
+  
+  // Calculate starting page based on startFrom
+  page = Math.floor(startFrom / 100) + 1;
+  const skipCount = startFrom % 100;
+
+  console.log(`📊 Total users found: ${totalCount}`);
+  console.log(`📈 Starting from position: ${startFrom + 1}`);
+
+  while (hasMore && allUsers.length < 500) {
     const res = await fetch(
       `https://api.github.com/search/users?q=${encodeURIComponent(keyword)}&per_page=100&page=${page}`,
       { headers }
@@ -295,16 +340,37 @@ async function searchUsersByKeyword(keyword) {
     }
 
     const data = await res.json();
-    allUsers = allUsers.concat(data.items.map(user => user.login));
+    let users = data.items.map(user => user.login);
     
-    // Check if there are more pages
-    const linkHeader = res.headers.get('link');
-    if (!linkHeader || !linkHeader.includes('rel="next"')) {
+    // Skip already processed users
+    if (skipCount > 0 && page === Math.floor(startFrom / 100) + 1) {
+      users = users.slice(skipCount);
+    }
+    
+    allUsers = allUsers.concat(users);
+    
+    // Check if we've reached the limit or end of results
+    if (allUsers.length >= 500 || !data.items.length) {
       hasMore = false;
     } else {
-      page++;
+      // Check if there are more pages
+      const linkHeader = res.headers.get('link');
+      if (!linkHeader || !linkHeader.includes('rel="next"')) {
+        hasMore = false;
+      } else {
+        page++;
+      }
     }
   }
+
+  // Update search progress
+  searchProgress = {
+    lastSearch: keyword,
+    completedCount: startFrom + allUsers.length,
+    totalCount: totalCount,
+    remainingUsers: allUsers
+  };
+  updateSearchProgress();
 
   console.log(`✅ Found ${allUsers.length} users matching "${keyword}"`);
   return allUsers;
@@ -324,6 +390,60 @@ async function main() {
     const previouslyInvited = getPreviouslyInvitedUsers();
     console.log(`📋 Previously invited users: ${previouslyInvited.size}`);
 
+    // Check last search from log file
+    const logContent = fs.readFileSync(LOG_FILE, 'utf8');
+    const lastSearchLine = logContent.split('\n').reverse().find(line => line.includes('search-'));
+    
+    if (lastSearchLine) {
+      const lastSearch = lastSearchLine.split(' - ')[0].replace('search-', '');
+      console.log(`\n🔍 Checking last search: "${lastSearch}"`);
+      
+      const followers = await searchUsersByKeyword(lastSearch);
+      const members = await getOrgMembers(ORG);
+      const newFollowers = followers.filter(user => 
+        !members.includes(user) && !previouslyInvited.has(user)
+      );
+      
+      if (newFollowers.length > 0) {
+        console.log(`\n🎯 Found ${newFollowers.length} new users to invite:`);
+        for (const user of newFollowers) {
+          console.log(`   • @${user}`);
+        }
+
+        const confirm = await new Promise(resolve => {
+          rl.question('\nDo you want to proceed with sending invites? (yes/no): ', resolve);
+        });
+
+        if (confirm.toLowerCase() === 'yes') {
+          const forceInvite = await new Promise(resolve => {
+            rl.question('Do you want to force send invites (bypass 50 limit)? (yes/no): ', resolve);
+          });
+
+          let successfulInvites = 0;
+          for (const user of newFollowers) {
+            if (await inviteUser(user, `search-${lastSearch}`, ORG, forceInvite.toLowerCase() === 'yes')) {
+              successfulInvites++;
+              await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_INVITES));
+            }
+          }
+
+          console.log('\n✨ All done!');
+          console.log(`📊 Stats for this session:`);
+          console.log(`   • Successfully invited: ${successfulInvites} users`);
+          console.log(`   • Total invites sent: ${invitationStats.totalInvites}`);
+          console.log(`   • Invites in last 24h: ${invitationStats.last24Hours}`);
+          console.log(`   • Pending invites: ${invitationStats.pendingInvites}`);
+          console.log(`📝 Invitation log has been updated in ${LOG_FILE}`);
+          console.log(`📊 Stats have been saved to ${INVITATION_STATS_FILE}`);
+        } else {
+          console.log('❌ Invitation process cancelled.');
+        }
+      } else {
+        console.log('✨ No new followers found from last search!');
+      }
+    }
+
+    // Show main menu options
     console.log('\nPlease choose an option:');
     console.log('1. Invite followers of a specific user');
     console.log('2. Invite followers of an organization');
