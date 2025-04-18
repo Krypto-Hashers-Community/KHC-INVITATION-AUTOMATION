@@ -442,75 +442,35 @@ async function searchUsersByKeyword(keyword, startFrom = 0, getAllUsers = false)
   let allUsers = new Set(); // Using Set to avoid duplicates
   let totalProcessed = 0;
 
-  // Search strategies to get more than 1000 results
+  // Optimized search strategies - focusing on most effective filters
   const searchStrategies = [
-    // Search by created date ranges
+    // Strategy 1: Direct search with type:user
     async () => {
-      const years = [];
-      const currentYear = new Date().getFullYear();
-      for (let year = 2008; year <= currentYear; year++) {
-        years.push(year);
-      }
-
-      for (const year of years) {
-        for (let month = 1; month <= 12; month++) {
-          if (year === currentYear && month > new Date().getMonth() + 1) break;
-
-          const nextMonth = month === 12 ? 1 : month + 1;
-          const nextYear = month === 12 ? year + 1 : year;
-          
-          if (nextYear > currentYear || (nextYear === currentYear && nextMonth > new Date().getMonth() + 1)) break;
-
-          const query = `${keyword} created:${year}-${month.toString().padStart(2, '0')}..${nextYear}-${nextMonth.toString().padStart(2, '0')}`;
-          await searchWithQuery(query, allUsers);
-        }
-      }
+      const query = `${keyword} type:user`;
+      await searchWithQuery(query, allUsers);
     },
-    // Search by followers ranges
+    // Strategy 2: Search with language filters
     async () => {
-      const followerRanges = [
-        '0..10',
-        '11..50',
-        '51..100',
-        '101..200',
-        '201..500',
-        '501..1000',
-        '>1000'
-      ];
-
-      for (const range of followerRanges) {
-        const query = `${keyword} followers:${range}`;
+      const languages = ['javascript', 'python', 'java', 'cpp', 'typescript'];
+      for (const lang of languages) {
+        const query = `${keyword} language:${lang} type:user`;
         await searchWithQuery(query, allUsers);
       }
     },
-    // Search by location
+    // Strategy 3: Search by repositories
     async () => {
-      const locations = [
-        'india',
-        'usa',
-        'uk',
-        'canada',
-        'australia',
-        'germany',
-        'france',
-        'japan',
-        'brazil',
-        'russia',
-        'china'
-      ];
-
-      for (const location of locations) {
-        const query = `${keyword} location:${location}`;
-        await searchWithQuery(query, allUsers);
-      }
+      const query = `${keyword} repos:>0 type:user`;
+      await searchWithQuery(query, allUsers);
     }
   ];
 
   async function searchWithQuery(query, userSet) {
     let page = 1;
     let hasMore = true;
+    let retryCount = 0;
+    const maxRetries = 3;
 
-    while (hasMore) {
+    while (hasMore && page <= 10) { // Limit to 1000 results per query (10 pages * 100 results)
       try {
         const res = await fetch(
           `https://api.github.com/search/users?q=${encodeURIComponent(query)}&per_page=100&page=${page}`,
@@ -520,14 +480,20 @@ async function searchUsersByKeyword(keyword, startFrom = 0, getAllUsers = false)
         if (!res.ok) {
           const error = await res.json();
           if (error.message.includes('rate limit')) {
-            console.log('\n⚠️ Hit rate limit. Waiting for 60 seconds before continuing...');
-            await new Promise(resolve => setTimeout(resolve, 60000));
-            continue;
+            if (retryCount < maxRetries) {
+              retryCount++;
+              console.log('\n⚠️ Hit rate limit. Retrying in 10 seconds...');
+              await new Promise(resolve => setTimeout(resolve, 10000));
+              continue;
+            } else {
+              console.log('\n⚠️ Skipping after maximum retries');
+              break;
+            }
           }
           if (error.message.includes('Only the first 1000 search results are available')) {
             break;
           }
-          console.error(`❌ Failed to search users with query "${query}":`, error.message);
+          console.error(`❌ Search failed: ${error.message}`);
           break;
         }
 
@@ -539,7 +505,7 @@ async function searchUsersByKeyword(keyword, startFrom = 0, getAllUsers = false)
         // Show progress only if new users were added
         if (userSet.size > initialSize) {
           totalProcessed = userSet.size;
-          console.log(`\r📥 Found ${totalProcessed} unique users...`);
+          process.stdout.write(`\r📥 Found ${totalProcessed} unique users...`);
         }
 
         // Check if we should continue
@@ -547,9 +513,11 @@ async function searchUsersByKeyword(keyword, startFrom = 0, getAllUsers = false)
           hasMore = false;
         } else {
           page++;
-          // Add delay to avoid rate limiting
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // Smaller delay between requests
+          await new Promise(resolve => setTimeout(resolve, 500));
         }
+
+        retryCount = 0; // Reset retry count on successful request
       } catch (error) {
         console.error('❌ Error:', error.message);
         break;
@@ -557,11 +525,10 @@ async function searchUsersByKeyword(keyword, startFrom = 0, getAllUsers = false)
     }
   }
 
-  console.log('\n🔄 Using multiple search strategies to find all users...');
-  
   for (const [index, strategy] of searchStrategies.entries()) {
-    console.log(`\n📊 Using search strategy ${index + 1}/${searchStrategies.length}...`);
     await strategy();
+    // Don't continue with other strategies if we already found enough users
+    if (allUsers.size >= 1000) break;
   }
 
   const usersArray = Array.from(allUsers);
@@ -1037,6 +1004,93 @@ async function main() {
       } else {
         sourceUsername = ORG;
         followers = await getOrgFollowers(ORG);
+      }
+
+      if (followers.length > 0) {
+        let action = globalPreference;
+        
+        if (!action) {
+          console.log('\nFound users. What would you like to do?');
+          console.log('1. Send invitations');
+          console.log('2. Save user information to file');
+          
+          const choice = await new Promise(resolve => {
+            rl.question('Enter your choice (1-2): ', resolve);
+          });
+          
+          action = choice === '1' ? 'invite' : 'save';
+        }
+
+        if (action === 'save') {
+          const filepath = await saveUsersToFile(followers, 'org_followers', sourceUsername);
+          console.log('\n✨ All done!');
+          console.log(`📁 User information has been saved to: ${filepath}`);
+          console.log('You can find the following information for each user:');
+          console.log('- Username, Name, Bio');
+          console.log('- Location, Company, Blog');
+          console.log('- Number of repositories');
+          console.log('- Follower and following counts');
+          console.log('- Account creation date');
+          return;
+        }
+
+        // Continue with invitation process if action is 'invite'
+        const members = await getOrgMembers(targetOrg);
+        const newFollowers = followers.filter(user => 
+          !members.includes(user) && !previouslyInvited.has(user)
+        );
+        
+        if (newFollowers.length === 0) {
+          console.log('✨ No new followers to invite!');
+          return;
+        }
+
+        console.log(`\n🎯 Found ${newFollowers.length} new user${newFollowers.length === 1 ? '' : 's'} to invite:`);
+        for (const user of newFollowers) {
+          console.log(`   • @${user}`);
+        }
+
+        if (followers.length - newFollowers.length > 0) {
+          console.log(`\n⚠️ Skipping ${followers.length - newFollowers.length} previously invited users`);
+        }
+
+        const confirm = await new Promise(resolve => {
+          rl.question(`\nDo you want to proceed with sending invites to ${targetOrg}? (yes/no): `, resolve);
+        });
+
+        if (confirm.toLowerCase() !== 'yes') {
+          console.log('❌ Invitation process cancelled.');
+          return;
+        }
+
+        const forceInvite = await new Promise(resolve => {
+          rl.question('Do you want to force send invites (bypass 50 limit)? (yes/no): ', resolve);
+        });
+
+        let successfulInvites = 0;
+        for (const user of newFollowers) {
+          if (await inviteUser(user, sourceUsername, targetOrg, forceInvite.toLowerCase() === 'yes')) {
+            successfulInvites++;
+            await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_INVITES));
+          }
+        }
+
+        console.log('\n✨ All done!');
+        console.log(`📊 Stats for this session:`);
+        console.log(`   • Successfully invited: ${successfulInvites} users`);
+        console.log(`   • Total invites sent: ${invitationStats.totalInvites}`);
+        console.log(`   • Invites in last 24h: ${invitationStats.last24Hours}`);
+        console.log(`   • Pending invites: ${invitationStats.pendingInvites}`);
+        console.log(`📝 Invitation log has been updated in ${LOG_FILE}`);
+        console.log(`📊 Stats have been saved to ${INVITATION_STATS_FILE}`);
+
+        // After successful invites in any option, follow new members
+        if (successfulInvites > 0) {
+          console.log('\n👥 Following organization members...');
+          await followAllOrgMembers();
+        }
+      } else {
+        console.log('✨ No followers found for this organization!');
       }
     } else if (answer === '3') {
       let isValidUser = false;
