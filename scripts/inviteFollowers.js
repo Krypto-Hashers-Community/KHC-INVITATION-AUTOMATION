@@ -4,6 +4,7 @@ import 'dotenv/config';
 import readline from 'readline';
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 
 const ORG = 'Krypto-Hashers-Community';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -16,6 +17,10 @@ const DEFAULT_SAVE_FILE = 'github_users.json';
 
 // Track newly joined members
 const MEMBERS_FILE = 'org_members.json';
+
+// Add these constants after other constants
+const MAX_FAILED_INVITES = 20;
+let failedInvitesCount = 0;
 
 // Ensure log files exist
 if (!fs.existsSync(LOG_FILE)) {
@@ -304,6 +309,32 @@ async function getUserId(username) {
   }
 }
 
+async function commitAndPushChanges() {
+  const date = new Date().toISOString().split('T')[0];
+  const time = new Date().toTimeString().split(' ')[0];
+  
+  try {
+    // Add all changes
+    execSync('git add invitation_log.txt invitation_stats.json org_members.json users_data/*');
+    
+    // Create commit message with stats
+    const commitMessage = `[Auto] Update invitation logs ${date} ${time}
+
+- Total invites sent: ${invitationStats.totalInvites}
+- Invites in last 24h: ${invitationStats.last24Hours}
+- Pending invites: ${invitationStats.pendingInvites}
+- Failed due to rate limit: ${failedInvitesCount}`;
+
+    // Commit and push
+    execSync(`git commit -m "${commitMessage}"`);
+    execSync('git push');
+    
+    console.log('\n✅ Successfully committed and pushed changes to GitHub');
+  } catch (error) {
+    console.error('\n❌ Failed to commit changes:', error.message);
+  }
+}
+
 async function inviteUser(username, sourceUsername, targetOrg, forceInvite = false) {
   if (!forceInvite && !canSendMoreInvites()) {
     console.log(`⚠️ Reached daily invitation limit (50). Use force option to bypass this limit.`);
@@ -365,16 +396,15 @@ async function inviteUser(username, sourceUsername, targetOrg, forceInvite = fal
       return true;
     } else {
       const err = await res.json();
-      if (err.message === 'Validation Failed') {
-        // Check specific error details
-        if (err.errors) {
-          const errorDetails = err.errors.map(e => e.message).join(', ');
-          console.error(`❌ Failed to invite ${username}: ${errorDetails}`);
-        } else if (err.documentation_url) {
-          console.error(`❌ Failed to invite ${username}: Please check organization settings and token permissions`);
-          console.error(`   Documentation: ${err.documentation_url}`);
-        } else {
-          console.error(`❌ Failed to invite ${username}: ${err.message}`);
+      if (err.message.includes('rate limit')) {
+        failedInvitesCount++;
+        console.log(`❌ Failed to invite ${username}: Over invitation rate limit (Failed: ${failedInvitesCount}/${MAX_FAILED_INVITES})`);
+        
+        // If we've hit the maximum failed invites, commit and exit
+        if (failedInvitesCount >= MAX_FAILED_INVITES) {
+          console.log('\n⚠️ Reached maximum failed invites. Stopping and committing changes...');
+          await commitAndPushChanges();
+          process.exit(0);
         }
       } else {
         console.error(`❌ Failed to invite ${username}: ${err.message}`);
@@ -972,6 +1002,93 @@ async function main() {
         rl.question('Enter the GitHub username: ', resolve);
       });
       followers = await getFollowers(sourceUsername);
+      
+      if (followers.length > 0) {
+        let action = globalPreference;
+        
+        if (!action) {
+          console.log('\nFound users. What would you like to do?');
+          console.log('1. Send invitations');
+          console.log('2. Save user information to file');
+          
+          const choice = await new Promise(resolve => {
+            rl.question('Enter your choice (1-2): ', resolve);
+          });
+          
+          action = choice === '1' ? 'invite' : 'save';
+        }
+
+        if (action === 'save') {
+          const filepath = await saveUsersToFile(followers, 'user_followers', sourceUsername);
+          console.log('\n✨ All done!');
+          console.log(`📁 User information has been saved to: ${filepath}`);
+          console.log('You can find the following information for each user:');
+          console.log('- Username, Name, Bio');
+          console.log('- Location, Company, Blog');
+          console.log('- Number of repositories');
+          console.log('- Follower and following counts');
+          console.log('- Account creation date');
+          return;
+        }
+
+        // Continue with invitation process if action is 'invite'
+        const members = await getOrgMembers(targetOrg);
+        const newFollowers = followers.filter(user => 
+          !members.includes(user) && !previouslyInvited.has(user)
+        );
+
+        if (newFollowers.length === 0) {
+          console.log('✨ No new followers to invite!');
+          return;
+        }
+
+        console.log(`\n🎯 Found ${newFollowers.length} new user${newFollowers.length === 1 ? '' : 's'} to invite:`);
+        for (const user of newFollowers) {
+          console.log(`   • @${user}`);
+        }
+
+        if (followers.length - newFollowers.length > 0) {
+          console.log(`\n⚠️ Skipping ${followers.length - newFollowers.length} previously invited users`);
+        }
+
+        const confirm = await new Promise(resolve => {
+          rl.question(`\nDo you want to proceed with sending invites to ${targetOrg}? (yes/no): `, resolve);
+        });
+
+        if (confirm.toLowerCase() !== 'yes') {
+          console.log('❌ Invitation process cancelled.');
+          return;
+        }
+
+        const forceInvite = await new Promise(resolve => {
+          rl.question('Do you want to force send invites (bypass 50 limit)? (yes/no): ', resolve);
+        });
+
+        let successfulInvites = 0;
+        for (const user of newFollowers) {
+          if (await inviteUser(user, sourceUsername, targetOrg, forceInvite.toLowerCase() === 'yes')) {
+            successfulInvites++;
+            await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_INVITES));
+          }
+        }
+
+        console.log('\n✨ All done!');
+        console.log(`📊 Stats for this session:`);
+        console.log(`   • Successfully invited: ${successfulInvites} users`);
+        console.log(`   • Total invites sent: ${invitationStats.totalInvites}`);
+        console.log(`   • Invites in last 24h: ${invitationStats.last24Hours}`);
+        console.log(`   • Pending invites: ${invitationStats.pendingInvites}`);
+        console.log(`📝 Invitation log has been updated in ${LOG_FILE}`);
+        console.log(`📊 Stats have been saved to ${INVITATION_STATS_FILE}`);
+
+        // After successful invites in any option, follow new members
+        if (successfulInvites > 0) {
+          console.log('\n👥 Following organization members...');
+          await followAllOrgMembers();
+        }
+      } else {
+        console.log('✨ No followers found for this user!');
+      }
     } else if (answer === '2') {
       console.log('\nChoose organization option:');
       console.log('1. Krypto-Hashers-Community (KHC)');
