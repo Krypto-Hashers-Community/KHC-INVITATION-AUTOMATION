@@ -22,6 +22,9 @@ const MEMBERS_FILE = 'org_members.json';
 const MAX_FAILED_INVITES = 20;
 let failedInvitesCount = 0;
 
+// Add this constant near the top with other constants
+const FOLLOWED_USERS_FILE = 'followed_users.json';
+
 // Ensure log files exist
 if (!fs.existsSync(LOG_FILE)) {
   fs.writeFileSync(LOG_FILE, '');
@@ -383,6 +386,9 @@ async function inviteUser(username, sourceUsername, targetOrg, forceInvite = fal
 
     if (res.ok) {
       console.log(`✅ Successfully invited @${username}`);
+      // Reset failed invites counter on success
+      failedInvitesCount = 0;
+      
       // Update stats
       invitationStats.totalInvites++;
       invitationStats.last24Hours++;
@@ -396,23 +402,37 @@ async function inviteUser(username, sourceUsername, targetOrg, forceInvite = fal
       return true;
     } else {
       const err = await res.json();
+      failedInvitesCount++;
+      
+      // Log the specific error message
       if (err.message.includes('rate limit')) {
-        failedInvitesCount++;
         console.log(`❌ Failed to invite ${username}: Over invitation rate limit (Failed: ${failedInvitesCount}/${MAX_FAILED_INVITES})`);
-        
-        // If we've hit the maximum failed invites, commit and exit
-        if (failedInvitesCount >= MAX_FAILED_INVITES) {
-          console.log('\n⚠️ Reached maximum failed invites. Stopping and committing changes...');
-          await commitAndPushChanges();
-          process.exit(0);
-        }
+      } else if (err.message === 'Validation Failed') {
+        console.log(`❌ Failed to invite ${username}: Validation Failed (Failed: ${failedInvitesCount}/${MAX_FAILED_INVITES})`);
       } else {
-        console.error(`❌ Failed to invite ${username}: ${err.message}`);
+        console.log(`❌ Failed to invite ${username}: ${err.message} (Failed: ${failedInvitesCount}/${MAX_FAILED_INVITES})`);
       }
+      
+      // If we've hit the maximum failed invites, commit and exit
+      if (failedInvitesCount >= MAX_FAILED_INVITES) {
+        console.log('\n⚠️ Reached maximum failed invites. Stopping and committing changes...');
+        await commitAndPushChanges();
+        process.exit(0);
+      }
+      
       return false;
     }
   } catch (error) {
-    console.error(`❌ Failed to invite ${username}: ${error.message}`);
+    failedInvitesCount++;
+    console.error(`❌ Failed to invite ${username}: ${error.message} (Failed: ${failedInvitesCount}/${MAX_FAILED_INVITES})`);
+    
+    // If we've hit the maximum failed invites, commit and exit
+    if (failedInvitesCount >= MAX_FAILED_INVITES) {
+      console.log('\n⚠️ Reached maximum failed invites. Stopping and committing changes...');
+      await commitAndPushChanges();
+      process.exit(0);
+    }
+    
     return false;
   }
 }
@@ -749,8 +769,29 @@ async function followUser(username) {
   }
 }
 
+function loadFollowedUsers() {
+  if (!fs.existsSync(FOLLOWED_USERS_FILE)) {
+    fs.writeFileSync(FOLLOWED_USERS_FILE, JSON.stringify([]));
+    return new Set();
+  }
+  try {
+    return new Set(JSON.parse(fs.readFileSync(FOLLOWED_USERS_FILE, 'utf8')));
+  } catch (error) {
+    console.error('Error loading followed users file:', error);
+    return new Set();
+  }
+}
+
+function saveFollowedUsers(followedUsers) {
+  fs.writeFileSync(FOLLOWED_USERS_FILE, JSON.stringify(Array.from(followedUsers)));
+}
+
 async function followAllOrgMembers() {
   console.log('\n🔍 Fetching all organization members...');
+  
+  // Load already followed users
+  const followedUsers = loadFollowedUsers();
+  console.log(`📋 Previously followed users: ${followedUsers.size}`);
   
   // Get current members
   const currentMembers = new Set();
@@ -779,16 +820,28 @@ async function followAllOrgMembers() {
 
   console.log(`\n👥 Found ${currentMembers.size} organization members`);
   
+  // Filter out already followed users
+  const newMembers = Array.from(currentMembers).filter(member => !followedUsers.has(member));
+  console.log(`🆕 Found ${newMembers.length} new members to follow`);
+  
+  if (newMembers.length === 0) {
+    console.log('✨ No new members to follow!');
+    return;
+  }
+  
   let successCount = 0;
-  for (const member of currentMembers) {
+  for (const member of newMembers) {
     if (await followUser(member)) {
       successCount++;
+      followedUsers.add(member);
+      // Save after each successful follow to prevent duplicates if script is interrupted
+      saveFollowedUsers(followedUsers);
     }
     // Add delay to avoid rate limiting
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  console.log(`\n✨ Successfully followed ${successCount} members`);
+  console.log(`\n✨ Successfully followed ${successCount} new members`);
   
   // Update the members list
   updateMembersList(currentMembers);
