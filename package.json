@@ -1,14 +1,28 @@
 {
-  "name": "invites-to-org",
+  "name": "khc-invitation-bot",
   "version": "1.0.0",
-  "description": "Automatically invite GitHub followers to your organization",
-  "main": "scripts/inviteFollowers.js",
+  "description": "GitHub organization invitation bot for Krypto-Hashers-Community",
   "type": "module",
+  "main": "scripts/inviteFollowers.mjs",
   "scripts": {
-    "start": "node scripts/inviteFollowers.js"
+    "start": "node scripts/inviteFollowers.mjs"
   },
   "dependencies": {
-    "node-fetch": "^3.3.2",
-    "dotenv": "^16.4.1"
-  }
-} 
+    "dotenv": "^16.4.1",
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ekrishnachaitanya2004/KHC-INVITATION-AUTOMATION.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ekrishnachaitanya2004/KHC-INVITATION-AUTOMATION/issues"
+  },
+  "homepage": "https://github.com/ekrishnachaitanya2004/KHC-INVITATION-AUTOMATION#readme"
+}
