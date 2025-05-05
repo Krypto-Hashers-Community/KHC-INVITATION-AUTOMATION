@@ -5,9 +5,14 @@ node_modules/
 .env
 
 # Logs
-*.log
 npm-debug.log*
 
 # OS files
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Keep these files
+!invitation_log.txt
+!invitation_log.txt.backup
+!invited_users.json
+!invitation_stats.json 
