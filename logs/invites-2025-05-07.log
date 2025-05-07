@@ -254,3 +254,57 @@
 {"timestamp":"2025-05-07T01:20:21.469Z","type":"INVITE_SUCCESS","message":"Successfully invited 521xueweihan","userId":8255800,"searchTerm":"language:Python followers:>50"}
 {"timestamp":"2025-05-07T01:20:23.471Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: pjreddie","searchTerm":"language:Python followers:>50"}
 {"timestamp":"2025-05-07T01:20:24.138Z","type":"INVITE_SUCCESS","message":"Successfully invited pjreddie","userId":302108,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:26.139Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: NeuralNine","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:26.796Z","type":"INVITE_SUCCESS","message":"Successfully invited NeuralNine","userId":49538132,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:28.798Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: Jack-Cherish","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:29.504Z","type":"INVITE_SUCCESS","message":"Successfully invited Jack-Cherish","userId":16872370,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:31.506Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: abhishekkrthakur","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:32.166Z","type":"INVITE_SUCCESS","message":"Successfully invited abhishekkrthakur","userId":1183441,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:34.167Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: colah","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:34.874Z","type":"INVITE_SUCCESS","message":"Successfully invited colah","userId":61658,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:36.875Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jcjohnson","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:37.513Z","type":"INVITE_SUCCESS","message":"Successfully invited jcjohnson","userId":2718714,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:39.515Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: EbookFoundation","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:40.122Z","type":"INVITE_ERROR","message":"Failed to invite EbookFoundation","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:42.125Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: swisskyrepo","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:42.774Z","type":"INVITE_SUCCESS","message":"Successfully invited swisskyrepo","userId":12152583,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:44.776Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: carpedm20","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:45.487Z","type":"INVITE_SUCCESS","message":"Successfully invited carpedm20","userId":3346407,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:47.488Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: CleverProgrammer","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:48.246Z","type":"INVITE_SUCCESS","message":"Successfully invited CleverProgrammer","userId":8461930,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:50.247Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: lepture","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:50.903Z","type":"INVITE_SUCCESS","message":"Successfully invited lepture","userId":290496,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:52.904Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: evilsocket","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:53.700Z","type":"INVITE_SUCCESS","message":"Successfully invited evilsocket","userId":86922,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:55.702Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: ashishps1","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:56.394Z","type":"INVITE_SUCCESS","message":"Successfully invited ashishps1","userId":8646889,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:58.395Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: simonw","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:59.135Z","type":"INVITE_SUCCESS","message":"Successfully invited simonw","userId":9599,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:01.136Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: lmstudio-ai","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:01.771Z","type":"INVITE_ERROR","message":"Failed to invite lmstudio-ai","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:03.773Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: django","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:04.373Z","type":"INVITE_ERROR","message":"Failed to invite django","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:06.375Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: meta-llama","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:06.965Z","type":"INVITE_ERROR","message":"Failed to invite meta-llama","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:08.967Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: awslabs","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:09.638Z","type":"INVITE_ERROR","message":"Failed to invite awslabs","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:11.640Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: drkostas","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:12.289Z","type":"INVITE_SUCCESS","message":"Successfully invited drkostas","userId":22260005,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:14.291Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: Rafaelmdcarneiro","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:14.950Z","type":"INVITE_SUCCESS","message":"Successfully invited Rafaelmdcarneiro","userId":20961091,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:16.951Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: vinta","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:17.585Z","type":"INVITE_SUCCESS","message":"Successfully invited vinta","userId":652070,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:19.586Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: UberGuidoZ","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:20.270Z","type":"INVITE_SUCCESS","message":"Successfully invited UberGuidoZ","userId":57457139,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:22.272Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: nishant-Tiwari24","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:22.939Z","type":"INVITE_SUCCESS","message":"Successfully invited nishant-Tiwari24","userId":124623023,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:24.940Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: cursoemvideo","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:25.549Z","type":"INVITE_ERROR","message":"Failed to invite cursoemvideo","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:27.551Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: Germey","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:28.234Z","type":"INVITE_SUCCESS","message":"Successfully invited Germey","userId":8678661,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:30.236Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: davidbombal","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:30.916Z","type":"INVITE_SUCCESS","message":"Successfully invited davidbombal","userId":22679022,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:32.918Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: QwenLM","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:33.523Z","type":"INVITE_ERROR","message":"Failed to invite QwenLM","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:21:35.770Z","type":"RATE_LIMIT","message":"Current rate limits","core":{"limit":5000,"used":412,"remaining":4588,"reset":1746583449},"search":{"limit":30,"used":0,"remaining":30,"reset":1746580955}}
+{"timestamp":"2025-05-07T01:21:35.782Z","type":"GIT","message":"Pushing log file to GitHub"}
