@@ -1,0 +1,193 @@
+# Complete GitHub Organization Invitation Commands Reference
+# ================================================
+
+# === BASIC COMMANDS ===
+npm run stats                    # Check current invitation statistics
+npm run invite "query" number    # Basic invite command structure
+
+# === LOCATION-BASED SEARCHES ===
+# By Country
+npm run invite "location:India" 100
+npm run invite "location:USA" 100
+npm run invite "location:UK" 100
+npm run invite "location:Germany" 100
+npm run invite "location:Canada" 100
+npm run invite "location:Australia" 100
+npm run invite "location:Singapore" 100
+npm run invite "location:Japan" 100
+
+# By City
+npm run invite "location:\"San Francisco\"" 100
+npm run invite "location:\"New York\"" 100
+npm run invite "location:London" 100
+npm run invite "location:Bangalore" 100
+npm run invite "location:\"Hong Kong\"" 100
+
+# === PROGRAMMING LANGUAGES ===
+# Popular Languages
+npm run invite "language:JavaScript" 100
+npm run invite "language:Python" 100
+npm run invite "language:Java" 100
+npm run invite "language:C++" 100
+npm run invite "language:Ruby" 100
+npm run invite "language:Go" 100
+npm run invite "language:Rust" 100
+npm run invite "language:TypeScript" 100
+npm run invite "language:PHP" 100
+npm run invite "language:Swift" 100
+npm run invite "language:Kotlin" 100
+
+# === FOLLOWER RANGES ===
+npm run invite "followers:>1000" 100
+npm run invite "followers:500..1000" 100
+npm run invite "followers:100..500" 100
+npm run invite "followers:50..100" 100
+npm run invite "followers:>50" 100
+
+# === REPOSITORY CRITERIA ===
+npm run invite "repos:>50" 100
+npm run invite "repos:>30" 100
+npm run invite "repos:>20" 100
+npm run invite "repos:10..30" 100
+
+# === ACTIVITY-BASED ===
+# By Creation Date
+npm run invite "created:>2023-01-01" 100
+npm run invite "created:2022-01-01..2022-12-31" 100
+npm run invite "created:>2021-01-01" 100
+
+# By Last Active
+npm run invite "pushed:>2024-01-01" 100
+npm run invite "pushed:>2023-06-01" 100
+
+# === TECHNOLOGY STACKS ===
+# Frontend
+npm run invite "\"frontend developer\" in:bio" 100
+npm run invite "\"react developer\" in:bio" 100
+npm run invite "\"vue developer\" in:bio" 100
+npm run invite "\"angular developer\" in:bio" 100
+npm run invite "\"web developer\" in:bio" 100
+
+# Backend
+npm run invite "\"backend developer\" in:bio" 100
+npm run invite "\"nodejs developer\" in:bio" 100
+npm run invite "\"java developer\" in:bio" 100
+npm run invite "\"python developer\" in:bio" 100
+
+# Full Stack
+npm run invite "\"full stack\" in:bio" 100
+npm run invite "\"fullstack\" in:bio" 100
+npm run invite "\"full-stack\" in:bio" 100
+
+# DevOps/Cloud
+npm run invite "\"devops engineer\" in:bio" 100
+npm run invite "\"cloud engineer\" in:bio" 100
+npm run invite "\"aws\" in:bio" 100
+npm run invite "\"azure\" in:bio" 100
+npm run invite "\"gcp\" in:bio" 100
+npm run invite "\"kubernetes\" in:bio" 100
+npm run invite "\"docker\" in:bio" 100
+
+# Mobile
+npm run invite "\"mobile developer\" in:bio" 100
+npm run invite "\"android developer\" in:bio" 100
+npm run invite "\"ios developer\" in:bio" 100
+npm run invite "\"flutter developer\" in:bio" 100
+
+# === COMBINED SEARCHES ===
+# Location + Language + Followers
+npm run invite "location:India language:JavaScript followers:>50" 100
+npm run invite "location:USA language:Python followers:>50" 100
+npm run invite "location:UK language:Java followers:>50" 100
+
+# Technology + Experience
+npm run invite "\"senior developer\" language:JavaScript followers:>50" 100
+npm run invite "\"tech lead\" language:Python followers:>50" 100
+npm run invite "\"software architect\" followers:>100" 100
+
+# Framework Specific
+npm run invite "\"spring boot\" in:bio followers:>30" 100
+npm run invite "\"react native\" in:bio followers:>30" 100
+npm run invite "\"tensorflow\" in:bio followers:>30" 100
+npm run invite "\"django\" in:bio followers:>30" 100
+npm run invite "\"laravel\" in:bio followers:>30" 100
+
+# === ORGANIZATION TARGETING ===
+# By Organization Association
+npm run invite "org:google followers:>50" 100
+npm run invite "org:microsoft followers:>50" 100
+npm run invite "org:facebook followers:>50" 100
+npm run invite "org:amazon followers:>50" 100
+
+# === REPOSITORY INTERACTION ===
+# By Star Count
+npm run invite "stars:>1000" 100
+npm run invite "stars:500..1000" 100
+npm run invite "stars:100..500" 100
+
+# By Specific Repos
+npm run invite "repo:tensorflow/tensorflow stargazers:>5" 100
+npm run invite "repo:facebook/react stargazers:>5" 100
+npm run invite "repo:microsoft/vscode stargazers:>5" 100
+
+# === ADVANCED COMBINATIONS ===
+# Multi-criteria Searches
+npm run invite "language:JavaScript location:India followers:>50 created:>2023-01-01" 100
+npm run invite "\"full stack\" language:Python location:USA followers:>100 repos:>10" 100
+npm run invite "\"devops\" language:Go stars:>50 followers:>100" 100
+
+# === EDUCATION BASED ===
+npm run invite "\"computer science\" in:bio followers:>30" 100
+npm run invite "\"software engineering\" in:bio followers:>30" 100
+npm run invite "\"phd\" in:bio language:Python followers:>50" 100
+
+# === COMPANY BASED ===
+npm run invite "company:Google followers:>50" 100
+npm run invite "company:Microsoft followers:>50" 100
+npm run invite "company:Amazon followers:>50" 100
+npm run invite "company:Facebook followers:>50" 100
+
+# === BEST PRACTICES ===
+# 1. Always check rate limits: npm run stats
+# 2. Wait 2-3 minutes between commands
+# 3. Start with smaller batches (50) before large ones
+# 4. Monitor invitation success rate
+# 5. Use more specific queries for better targeting
+
+# === RATE LIMIT MANAGEMENT ===
+# Morning Batch (100 invites)
+npm run invite "language:JavaScript followers:>50" 100
+# Wait 3 minutes
+npm run invite "language:Python followers:>50" 100
+# Wait 3 minutes
+npm run invite "language:Java followers:>50" 100
+
+# === SEARCH OPERATORS ===
+# AND operator (space between terms)
+npm run invite "language:JavaScript location:USA" 100
+
+# OR operator
+npm run invite "language:JavaScript OR language:TypeScript" 100
+
+# NOT operator
+npm run invite "language:JavaScript NOT language:TypeScript" 100
+
+# === TIPS FOR SUCCESS ===
+# 1. Mix different search criteria for diverse candidates
+# 2. Use location-specific searches during target region's working hours
+# 3. Adjust follower counts based on language/location popularity
+# 4. Use quotes for exact matches
+# 5. Combine multiple criteria for more targeted results
+
+# === TROUBLESHOOTING ===
+# If rate limited:
+# 1. Check: npm run stats
+# 2. Wait for reset time
+# 3. Reduce batch size
+# 4. Increase wait time between batches
+
+# === MONITORING ===
+# Regular monitoring commands:
+npm run stats                    # Check overall stats
+npm run invite "query" 1        # Test single invite
+npm run invite "query" 10       # Small batch test 

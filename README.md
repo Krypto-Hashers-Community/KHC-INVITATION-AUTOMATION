@@ -1,50 +1,85 @@
-   # Invites to Org
+# GitHub Organization Invitation Manager
 
-   A GitHub automation script that automatically invites followers of a bot account to join your organization.
+A robust system for managing GitHub organization invitations with duplicate prevention, tracking, and statistics.
 
-   ## Features
+## Features
 
-   - Automatically detects new followers of your bot account
-   - Checks if followers are already organization members
-   - Sends organization invitations to new followers
-   - Simple configuration through environment variables
+- ✅ Prevents duplicate invitations
+- 📊 Tracks invitation statistics
+- 🔍 Supports various search terms
+- 📈 Provides detailed reporting
+- ⚡ Rate limit handling
+- 🔄 Persistent storage of invited users
 
-   ## Setup
+## Setup
 
-   1. Clone this repository
-   2. Install dependencies:
-      ```bash
-      npm install
-      ```
-   3. Copy `.env.example` to `.env`:
-      ```bash
-      cp .env.example .env
-      ```
-   4. Edit `.env` with your configuration:
-      - `GITHUB_TOKEN`: Your GitHub Personal Access Token with 'admin:org' scope
-      - `ORG`: Your organization name (optional - can be changed in the script)
-      - `BOT_USERNAME`: Your bot account username (optional - can be changed in the script)
+1. Install dependencies:
+```bash
+npm install
+```
 
-   ## Usage
+2. Set up environment variables:
+```bash
+export GITHUB_TOKEN="your-github-token"
+export GITHUB_ORG="your-organization-name"
+```
 
-   Run the script:
-   ```bash
-   npm start
-   ```
+## Usage
 
-   ## Configuration
+### Inviting Users
 
-   You can modify the following constants in `scripts/inviteFollowers.js`:
-   - `ORG`: Your organization name
-   - `BOT_USERNAME`: Your bot account username
+To invite users based on a search term:
+```bash
+npm run invite "search-term" [max-invites]
+```
 
-   ## Requirements
+Examples:
+```bash
+# Invite up to 50 users matching "IIT"
+npm run invite "search-IIT"
 
-   - Node.js 14 or higher
-   - GitHub Personal Access Token with 'admin:org' scope
-   - A bot account that followers can follow
-   - Organization admin privileges
+# Invite up to 100 users from Germany
+npm run invite "location:Germany" 100
+```
 
-   ## Security
+### Viewing Statistics
 
-   Never commit your `.env` file or expose your GitHub token. The `.env` file is already in `.gitignore` to prevent accidental commits. 
+To view invitation statistics:
+```bash
+npm run stats
+```
+
+This will show:
+- Total invites sent
+- Unique users invited
+- Breakdown by search term
+- Last invitation timestamp
+
+## Data Storage
+
+The system maintains two JSON files in the `data` directory:
+- `invited_users.json`: Tracks all invited users to prevent duplicates
+- `invitation_stats.json`: Stores invitation statistics and metrics
+
+## Search Terms
+
+You can use various GitHub search qualifiers:
+- `location:Country`
+- `language:JavaScript`
+- `followers:>100`
+- `created:>2020-01-01`
+
+## Rate Limiting
+
+The system includes built-in rate limiting:
+- 1-second delay between invitations
+- Maximum invites per run can be specified
+- Respects GitHub API rate limits
+
+## Troubleshooting
+
+If you encounter issues:
+1. Ensure your GitHub token has the required permissions
+2. Check the `data` directory exists and is writable
+3. Verify your organization name is correct
+4. Check GitHub API rate limits 

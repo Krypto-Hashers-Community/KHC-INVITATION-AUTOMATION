@@ -1,15 +1,16 @@
 {
-  "name": "khc-invitation-bot",
+  "name": "github-org-invites",
   "version": "1.0.0",
-  "description": "GitHub organization invitation bot for Krypto-Hashers-Community",
-  "type": "module",
-  "main": "scripts/inviteFollowers.mjs",
+  "description": "GitHub Organization Invitation Manager with duplicate prevention",
+  "main": "scripts/inviteManager.js",
   "scripts": {
-    "start": "node scripts/inviteFollowers.mjs"
+    "invite": "node scripts/inviteManager.js invite",
+    "stats": "node scripts/inviteManager.js stats"
   },
   "dependencies": {
-    "dotenv": "^16.4.1",
-    "node-fetch": "^3.3.2"
+    "@octokit/rest": "^19.0.0",
+    "dotenv": "^16.0.0",
+    "simple-git": "^3.27.0"
   },
   "engines": {
     "node": ">=14.0.0"

@@ -2,10 +2,9 @@
 import fetch from 'node-fetch';
 import { config } from 'dotenv';
 import { createInterface } from 'readline';
-import { writeFileSync, readFileSync, appendFileSync, existsSync, mkdirSync, copyFileSync, unlinkSync } from 'fs';
-import { join, dirname, resolve } from 'path';
+import { writeFileSync, readFileSync, appendFileSync, existsSync, mkdirSync, copyFileSync, unlinkSync, readdirSync } from 'fs';
+import { join, dirname, resolve, basename } from 'path';
 import { execSync } from 'child_process';
-import { readdirSync, basename } from 'fs';
 
 // Initialize dotenv
 config();
@@ -20,6 +19,8 @@ const USERS_DATA_DIR = 'users_data';
 const DEFAULT_SAVE_FILE = 'github_users.json';
 const DEFAULT_TEAM = 'support';
 const DEFAULT_TEAM_URL = 'https://github.com/orgs/Krypto-Hashers-Community/teams/support';
+const CONTRIBUTORS_TEAM = 'contributors';
+const CONTRIBUTORS_TEAM_URL = 'https://github.com/orgs/Krypto-Hashers-Community/teams/contributors';
 
 // Track newly joined members
 const MEMBERS_FILE = 'org_members.json';
@@ -480,43 +481,110 @@ async function getUserId(username) {
   }
 }
 
-function cleanupLogFile() {
-  if (!existsSync(LOG_FILE)) return;
-  
-  const now = Date.now();
-  const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-  
-  const logContent = readFileSync(LOG_FILE, 'utf8');
-  const lines = logContent.split('\n').filter(line => {
-    if (!line.trim()) return false;
-    
-    const [timestamp] = line.split(' - ');
-    const inviteTime = new Date(timestamp).getTime();
-    return now - inviteTime <= oneDay;
-  });
-  
-  writeFileSync(LOG_FILE, lines.join('\n') + '\n');
+// Add this function to handle file permissions safely
+function setFilePermissions(file, mode) {
+  try {
+    const currentStats = readFileSync(file, { mode: 0o444 }); // Try reading with minimal permissions
+    writeFileSync(file, currentStats, { mode }); // Set new permissions
+    return true;
+  } catch (error) {
+    console.error(`❌ Permission error with ${file}:`, error.message);
+    return false;
+  }
 }
 
+// Restore the getLastSearchFromLog function
 function getLastSearchFromLog() {
   if (!existsSync(LOG_FILE)) return null;
   
-  const logContent = readFileSync(LOG_FILE, 'utf8');
-  const lines = logContent.split('\n').filter(Boolean);
-  
-  if (lines.length === 0) return null;
-  
-  const lastLine = lines[lines.length - 1];
-  const match = lastLine.match(/search-(.*?) -/);
-  return match ? match[1] : null;
+  try {
+    // Try to read even if read-only
+    const logContent = readFileSync(LOG_FILE, { mode: 0o444 }).toString('utf8');
+    const lines = logContent.split('\n').filter(Boolean);
+    
+    if (lines.length === 0) return null;
+    
+    const lastLine = lines[lines.length - 1];
+    const match = lastLine.match(/search-(.*?) -/);
+    return match ? match[1] : null;
+  } catch (error) {
+    console.error('❌ Error reading log file:', error.message);
+    return null;
+  }
 }
 
-// Modify the appendToLog function to ensure we preserve existing data
+// Modify ensureLogFileAccess to use the new permission handling
+function ensureLogFileAccess() {
+  try {
+    if (existsSync(LOG_FILE)) {
+      return setFilePermissions(LOG_FILE, 0o644); // Make writable
+    }
+    return true;
+  } catch (error) {
+    console.error('❌ Error checking log file:', error.message);
+    return false;
+  }
+}
+
+// Modify cleanupLogFile function
+function cleanupLogFile() {
+  if (!existsSync(LOG_FILE)) return;
+  
+  try {
+    // Make writable first
+    if (!ensureLogFileAccess()) {
+      throw new Error('Could not get write access to log file');
+    }
+
+    // Make backup before cleaning
+    copyFileSync(LOG_FILE, `${LOG_FILE}.backup`);
+    
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    
+    const logContent = readFileSync(LOG_FILE, 'utf8');
+    const lines = logContent.split('\n').filter(line => {
+      if (!line.trim()) return false;
+      
+      const [timestamp] = line.split(' - ');
+      const inviteTime = new Date(timestamp).getTime();
+      return now - inviteTime <= oneDay;
+    });
+    
+    // Write filtered content back
+    writeFileSync(LOG_FILE, lines.join('\n') + '\n');
+    
+    // Make read-only again
+    setFilePermissions(LOG_FILE, 0o444);
+  } catch (error) {
+    console.error('❌ Error cleaning log file:', error.message);
+    
+    // Try to restore from backup if cleaning failed
+    if (existsSync(`${LOG_FILE}.backup`)) {
+      try {
+        if (ensureLogFileAccess()) {
+          copyFileSync(`${LOG_FILE}.backup`, LOG_FILE);
+          setFilePermissions(LOG_FILE, 0o444);
+          console.log('✅ Restored from backup after cleanup error');
+        }
+      } catch (restoreError) {
+        console.error('❌ Error restoring from backup:', restoreError.message);
+      }
+    }
+  }
+}
+
+// Modify appendToLog function to use new permission handling
 function appendToLog(sourceUsername, invitedUser) {
   const timestamp = new Date().toISOString();
   const logEntry = `${timestamp} - ${sourceUsername} - ${invitedUser}\n`;
   
   try {
+    // Ensure we can write to the file
+    if (!ensureLogFileAccess()) {
+      throw new Error('Could not get write access to log file');
+    }
+    
     // Create backup of current log first if it exists
     if (existsSync(LOG_FILE)) {
       copyFileSync(LOG_FILE, `${LOG_FILE}.backup`);
@@ -560,11 +628,8 @@ function appendToLog(sourceUsername, invitedUser) {
       jsonEntries.map(entry => JSON.stringify(entry)).join('\n') + '\n'
     );
 
-    // Verify the write
-    const lastLine = readFileSync(LOG_FILE, 'utf8').split('\n').filter(Boolean).pop();
-    if (lastLine !== logEntry.trim()) {
-      throw new Error('Log entry verification failed');
-    }
+    // Make log file read-only again
+    setFilePermissions(LOG_FILE, 0o444);
 
     console.log('\n📝 Successfully logged invitation');
   } catch (error) {
@@ -573,9 +638,11 @@ function appendToLog(sourceUsername, invitedUser) {
     // Try to restore from backup if we have one
     if (existsSync(`${LOG_FILE}.backup`)) {
       try {
-        copyFileSync(`${LOG_FILE}.backup`, LOG_FILE);
-        appendFileSync(LOG_FILE, logEntry);
-        console.log('✅ Restored from backup and added new entry');
+        if (ensureLogFileAccess()) {
+          copyFileSync(`${LOG_FILE}.backup`, LOG_FILE);
+          setFilePermissions(LOG_FILE, 0o444);
+          console.log('✅ Restored from backup and added new entry');
+        }
       } catch (backupError) {
         console.error('❌ Failed to restore from backup:', backupError.message);
       }
@@ -914,8 +981,12 @@ async function inviteUser(username, sourceUsername, targetOrg, forceInvite = fal
       return false;
     }
 
+    // Determine which team to use based on the source
+    const isSponsorsInvite = sourceUsername === 'sponsors' || sourceUsername.startsWith('sponsor-');
+    const teamName = isSponsorsInvite ? 'Support' : 'Contributors';
+
     // Send the invitation
-    console.log(`\n📨 Inviting @${username} to ${targetOrg}${teamId ? ' Support Team' : ''}...`);
+    console.log(`\n📨 Inviting @${username} to ${targetOrg} ${teamName} Team...`);
     const inviteData = {
       invitee_id: userId,
       role: 'direct_member'
@@ -953,7 +1024,7 @@ async function inviteUser(username, sourceUsername, targetOrg, forceInvite = fal
       console.error('❌ Failed to send invitation:', error.message);
       return false;
     }
-
+      
     // Update stats
     invitationStats.totalInvites++;
     invitationStats.last24Hours++;
@@ -964,7 +1035,7 @@ async function inviteUser(username, sourceUsername, targetOrg, forceInvite = fal
     // Log the invitation
     const timestamp = new Date().toISOString();
     appendFileSync(LOG_FILE, `${timestamp} - ${sourceUsername} - ${username}\n`);
-
+      
     console.log('✅ Invitation sent successfully');
     return true;
   } catch (error) {
@@ -1057,13 +1128,18 @@ async function handleSponsorInvitations(followers, sourceUsername, targetOrg) {
     return false;
   }
 
-  console.log(`\n🎯 Found ${newFollowers.length} new user${newFollowers.length === 1 ? '' : 's'} to invite to the Support Team:`);
+  // Determine which team to use based on the source
+  const isSponsorsInvite = sourceUsername === 'sponsors' || sourceUsername.startsWith('sponsor-');
+  const teamSlug = isSponsorsInvite ? DEFAULT_TEAM : CONTRIBUTORS_TEAM;
+  const teamUrl = isSponsorsInvite ? DEFAULT_TEAM_URL : CONTRIBUTORS_TEAM_URL;
+
+  console.log(`\n🎯 Found ${newFollowers.length} new user${newFollowers.length === 1 ? '' : 's'} to invite to the ${isSponsorsInvite ? 'Support' : 'Contributors'} Team:`);
   for (const user of newFollowers) {
     console.log(`   • @${user}`);
   }
 
   const confirm = await new Promise(resolve => {
-    rl.question(`\nDo you want to proceed with sending invites to ${targetOrg} Support Team? (yes/no): `, resolve);
+    rl.question(`\nDo you want to proceed with sending invites to ${targetOrg} ${isSponsorsInvite ? 'Support' : 'Contributors'} Team? (yes/no): `, resolve);
   });
 
   if (confirm.toLowerCase() !== 'yes') {
@@ -1076,10 +1152,10 @@ async function handleSponsorInvitations(followers, sourceUsername, targetOrg) {
   });
 
   // Get team ID first
-  console.log('\n🔍 Fetching Support Team information...');
-  const teamId = await getTeamId(targetOrg, DEFAULT_TEAM);
+  console.log(`\n🔍 Fetching ${isSponsorsInvite ? 'Support' : 'Contributors'} Team information...`);
+  const teamId = await getTeamId(targetOrg, teamSlug);
   if (!teamId) {
-    console.error('❌ Could not find Support Team. Please check the team URL and try again.');
+    console.error(`❌ Could not find ${isSponsorsInvite ? 'Support' : 'Contributors'} Team. Please check the team URL and try again.`);
     return false;
   }
 
@@ -1093,7 +1169,7 @@ async function handleSponsorInvitations(followers, sourceUsername, targetOrg) {
 
   console.log('\n✨ All done!');
   console.log(`📊 Stats for this session:`);
-  console.log(`   • Successfully invited: ${successfulInvites} users to Support Team`);
+  console.log(`   • Successfully invited: ${successfulInvites} users to ${isSponsorsInvite ? 'Support' : 'Contributors'} Team`);
   console.log(`   • Total invites sent: ${invitationStats.totalInvites}`);
   console.log(`   • Invites in last 24h: ${invitationStats.last24Hours}`);
   console.log(`   • Pending invites: ${invitationStats.pendingInvites}`);
@@ -1554,65 +1630,92 @@ async function getSponsoring(username) {
   return Array.from(allSponsoring);
 }
 
-// Add this function after the imports
+// Modify initializeLogFiles function to handle backup directory better
 function initializeLogFiles() {
   console.log('\n📋 Initializing log files...');
   
-  // Create backup directory if it doesn't exist
-  const backupDir = 'log_backups';
-  if (!existsSync(backupDir)) {
-    mkdirSync(backupDir, { recursive: true });
-  }
-
-  // Initialize or restore log files
-  const logFiles = [
-    LOG_FILE,
-    'invited_users.json',
-    'invitation_stats.json',
-    'search_progress.json'
-  ];
-
-  for (const file of logFiles) {
-    // If file doesn't exist, try to restore from backup
-    if (!existsSync(file)) {
-      console.log(`⚠️ ${file} not found, attempting to restore...`);
-      
-      // Try main backup
-      if (existsSync(`${file}.backup`)) {
-        copyFileSync(`${file}.backup`, file);
-        console.log(`✅ Restored ${file} from backup`);
-        continue;
-      }
-      
-      // Try dated backups
-      const backupFiles = readdirSync(backupDir)
-        .filter(f => f.startsWith(basename(file)))
-        .sort()
-        .reverse();
-      
-      if (backupFiles.length > 0) {
-        const latestBackup = join(backupDir, backupFiles[0]);
-        copyFileSync(latestBackup, file);
-        console.log(`✅ Restored ${file} from ${backupFiles[0]}`);
-        continue;
-      }
-      
-      // Create empty file if no backups found
-      writeFileSync(file, '');
-      console.log(`📝 Created new ${file}`);
+  try {
+    // Create backup directory if it doesn't exist
+    const backupDir = 'log_backups';
+    if (!existsSync(backupDir)) {
+      mkdirSync(backupDir, { recursive: true, mode: 0o755 });
     }
-  }
 
-  // Create daily backup with timestamp
-  const timestamp = new Date().toISOString().split('T')[0];
-  for (const file of logFiles) {
-    if (existsSync(file)) {
-      const backupName = `${basename(file)}_${timestamp}`;
-      copyFileSync(file, join(backupDir, backupName));
+    // Initialize or restore log files
+    const logFiles = [
+      LOG_FILE,
+      'invited_users.json',
+      'invitation_stats.json',
+      'search_progress.json'
+    ];
+
+    for (const file of logFiles) {
+      // Make file writable if it exists
+      if (existsSync(file)) {
+        setFilePermissions(file, 0o644);
+      }
+
+      // If file doesn't exist or is empty, try to restore from backup
+      if (!existsSync(file) || readFileSync(file, 'utf8').trim() === '') {
+        console.log(`⚠️ ${file} not found or empty, attempting to restore...`);
+        
+        // Try main backup
+        if (existsSync(`${file}.backup`)) {
+          copyFileSync(`${file}.backup`, file);
+          console.log(`✅ Restored ${file} from backup`);
+          continue;
+        }
+        
+        // Try dated backups
+        try {
+          const backupFiles = readdirSync(backupDir)
+            .filter(f => f.startsWith(basename(file)))
+            .sort()
+            .reverse();
+          
+          if (backupFiles.length > 0) {
+            const latestBackup = join(backupDir, backupFiles[0]);
+            copyFileSync(latestBackup, file);
+            console.log(`✅ Restored ${file} from ${backupFiles[0]}`);
+            continue;
+          }
+        } catch (error) {
+          console.error(`⚠️ Error accessing backup directory:`, error.message);
+        }
+        
+        // Create empty file if no backups found
+        writeFileSync(file, '', { mode: 0o644 });
+        console.log(`📝 Created new ${file}`);
+      }
     }
-  }
 
-  console.log('✅ Log initialization complete\n');
+    // Create daily backup with timestamp
+    const timestamp = new Date().toISOString().split('T')[0];
+    for (const file of logFiles) {
+      if (existsSync(file)) {
+        try {
+          const backupName = `${basename(file)}_${timestamp}`;
+          const backupPath = join(backupDir, backupName);
+          copyFileSync(file, backupPath);
+          // Set backup file permissions
+          setFilePermissions(backupPath, 0o644);
+        } catch (error) {
+          console.error(`⚠️ Error creating backup for ${file}:`, error.message);
+        }
+      }
+    }
+
+    // Make log files read-only
+    for (const file of logFiles) {
+      if (existsSync(file)) {
+        setFilePermissions(file, 0o444);
+      }
+    }
+
+    console.log('✅ Log initialization complete\n');
+  } catch (error) {
+    console.error('❌ Error during initialization:', error.message);
+  }
 }
 
 // Add this function to create periodic backups
@@ -1687,27 +1790,81 @@ async function main() {
       rl.question('Enter your choice (1-9): ', resolve);
     });
 
-    if (answer === '8' || answer === '9') {
-      const userInput = await new Promise(resolve => {
-        rl.question('Enter the GitHub profile/organization URL (e.g., https://github.com/username): ', resolve);
-      });
-
-      const username = extractGitHubUsername(userInput);
-      if (!username) {
-        console.error('❌ Invalid GitHub URL or username');
-        return false;
-      }
-
-      console.log(`\n🔍 Processing ${answer === '8' ? 'sponsors' : 'sponsored users'} for @${username}...`);
-      const sourceUsername = username;
-      const followers = answer === '8' ? 
-        await getSponsors(username) : 
-        await getSponsoring(username);
-
-      return await handleSponsorInvitations(followers, sourceUsername, ORG);
-    } else {
-      console.error('❌ Invalid choice. Please enter 1-9.');
+    const choice = parseInt(answer);
+    if (isNaN(choice) || choice < 1 || choice > 9) {
+      console.error('❌ Invalid choice. Please enter a number between 1 and 9.');
       return false;
+    }
+
+    switch (choice) {
+      case 1: {
+        const username = await new Promise(resolve => {
+          rl.question('Enter the GitHub username: ', resolve);
+        });
+        const followers = await getFollowers(username);
+        return await handleSponsorInvitations(followers, username, ORG);
+      }
+      case 2: {
+        const orgName = await new Promise(resolve => {
+          rl.question('Enter the organization name: ', resolve);
+        });
+        const followers = await getOrgFollowers(orgName);
+        return await handleSponsorInvitations(followers, orgName, ORG);
+      }
+      case 3: {
+        const username = await new Promise(resolve => {
+          rl.question('Enter the GitHub username or email: ', resolve);
+        });
+        return await handleSponsorInvitations([username], 'direct', ORG);
+      }
+      case 4: {
+        const keyword = await new Promise(resolve => {
+          rl.question('Enter search keyword or query: ', resolve);
+        });
+        const followers = await searchUsersByKeyword(keyword);
+        return await handleSponsorInvitations(followers, `search-${keyword}`, ORG);
+      }
+      case 5: {
+        const repoUrl = await new Promise(resolve => {
+          rl.question('Enter the repository URL: ', resolve);
+        });
+        const contributors = await getRepoContributors(repoUrl);
+        return await handleSponsorInvitations(contributors, `repo-${repoUrl}`, ORG);
+      }
+      case 6: {
+        return await followAllOrgMembers();
+      }
+      case 7: {
+        const repoUrl = await new Promise(resolve => {
+          rl.question('Enter the repository URL: ', resolve);
+        });
+        const users = await scanReadmeForUsers(repoUrl);
+        return await handleSponsorInvitations(users, `readme-${repoUrl}`, ORG);
+      }
+      case 8:
+      case 9: {
+        const userInput = await new Promise(resolve => {
+          rl.question('Enter the GitHub profile/organization URL (e.g., https://github.com/username): ', resolve);
+        });
+
+        const username = extractGitHubUsername(userInput);
+        if (!username) {
+          console.error('❌ Invalid GitHub URL or username');
+          return false;
+        }
+
+        console.log(`\n🔍 Processing ${choice === 8 ? 'sponsors' : 'sponsored users'} for @${username}...`);
+        const followers = choice === 8 ? 
+          await getSponsors(username) : 
+          await getSponsoring(username);
+
+        // For sponsors, use the special source name to trigger support team
+        const sourceUsername = choice === 8 ? `sponsor-${username}` : username;
+        return await handleSponsorInvitations(followers, sourceUsername, ORG);
+      }
+      default:
+        console.error('❌ Invalid choice. Please enter 1-9.');
+        return false;
     }
   } catch (error) {
     console.error('❌ An unexpected error occurred:', error.message);

@@ -1,0 +1,256 @@
+{"timestamp":"2025-05-07T01:14:10.414Z","type":"RATE_LIMIT","message":"Current rate limits","core":{"limit":5000,"used":112,"remaining":4888,"reset":1746583449},"search":{"limit":30,"used":0,"remaining":30,"reset":1746580510}}
+{"timestamp":"2025-05-07T01:14:10.419Z","type":"SEARCH","message":"Searching users with term: language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:10.671Z","type":"RATE_LIMIT","message":"Current rate limits","core":{"limit":5000,"used":112,"remaining":4888,"reset":1746583449},"search":{"limit":30,"used":0,"remaining":30,"reset":1746580510}}
+{"timestamp":"2025-05-07T01:14:11.064Z","type":"SEARCH_RESULTS","message":"Found users","total":100,"new":100}
+{"timestamp":"2025-05-07T01:14:11.065Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: yyx990803","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:11.886Z","type":"INVITE_SUCCESS","message":"Successfully invited yyx990803","userId":499550,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:13.887Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: gaearon","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:14.538Z","type":"INVITE_SUCCESS","message":"Successfully invited gaearon","userId":810438,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:16.540Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: ruanyf","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:17.218Z","type":"INVITE_SUCCESS","message":"Successfully invited ruanyf","userId":905434,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:19.220Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: deepseek-ai","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:19.871Z","type":"INVITE_ERROR","message":"Failed to invite deepseek-ai","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:21.874Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: bradtraversy","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:22.573Z","type":"INVITE_SUCCESS","message":"Successfully invited bradtraversy","userId":5550850,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:24.575Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: sindresorhus","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:25.220Z","type":"INVITE_SUCCESS","message":"Successfully invited sindresorhus","userId":170270,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:27.221Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: lucidrains","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:27.870Z","type":"INVITE_SUCCESS","message":"Successfully invited lucidrains","userId":108653,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:29.872Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: tj","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:30.560Z","type":"INVITE_SUCCESS","message":"Successfully invited tj","userId":25254,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:32.561Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: getify","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:33.220Z","type":"INVITE_SUCCESS","message":"Successfully invited getify","userId":150330,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:35.221Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: addyosmani","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:35.887Z","type":"INVITE_SUCCESS","message":"Successfully invited addyosmani","userId":110953,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:37.890Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: hiteshchoudhary","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:38.545Z","type":"INVITE_SUCCESS","message":"Successfully invited hiteshchoudhary","userId":11613311,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:40.547Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: ThePrimeagen","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:41.220Z","type":"INVITE_SUCCESS","message":"Successfully invited ThePrimeagen","userId":4458174,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:43.222Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: kamranahmedse","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:43.859Z","type":"INVITE_SUCCESS","message":"Successfully invited kamranahmedse","userId":4921183,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:45.861Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: filipedeschamps","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:46.542Z","type":"INVITE_SUCCESS","message":"Successfully invited filipedeschamps","userId":4248081,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:48.544Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: antfu","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:49.237Z","type":"INVITE_SUCCESS","message":"Successfully invited antfu","userId":11247099,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:51.240Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: wesbos","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:51.980Z","type":"INVITE_SUCCESS","message":"Successfully invited wesbos","userId":176013,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:53.982Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: kentcdodds","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:54.759Z","type":"INVITE_SUCCESS","message":"Successfully invited kentcdodds","userId":1500684,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:56.760Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: adrianhajdin","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:57.409Z","type":"INVITE_SUCCESS","message":"Successfully invited adrianhajdin","userId":24898559,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:14:59.411Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: midudev","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:00.137Z","type":"INVITE_SUCCESS","message":"Successfully invited midudev","userId":1561955,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:02.138Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: diego3g","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:02.846Z","type":"INVITE_SUCCESS","message":"Successfully invited diego3g","userId":2254731,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:04.847Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: iamshaunjp","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:05.527Z","type":"INVITE_SUCCESS","message":"Successfully invited iamshaunjp","userId":9838872,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:07.529Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: paulirish","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:08.172Z","type":"INVITE_SUCCESS","message":"Successfully invited paulirish","userId":39191,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:10.174Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: mouredev","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:10.829Z","type":"INVITE_SUCCESS","message":"Successfully invited mouredev","userId":17043402,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:12.830Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: benawad","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:13.451Z","type":"INVITE_SUCCESS","message":"Successfully invited benawad","userId":7872329,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:15.451Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: StephenGrider","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:16.072Z","type":"INVITE_SUCCESS","message":"Successfully invited StephenGrider","userId":5003903,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:18.074Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: freeCodeCamp","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:18.662Z","type":"INVITE_ERROR","message":"Failed to invite freeCodeCamp","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:20.664Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: sdras","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:21.334Z","type":"INVITE_SUCCESS","message":"Successfully invited sdras","userId":2281088,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:23.335Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: mrdoob","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:23.978Z","type":"INVITE_SUCCESS","message":"Successfully invited mrdoob","userId":97088,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:25.979Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: mbostock","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:26.633Z","type":"INVITE_SUCCESS","message":"Successfully invited mbostock","userId":230541,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:28.634Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: douglascrockford","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:29.313Z","type":"INVITE_SUCCESS","message":"Successfully invited douglascrockford","userId":262641,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:31.314Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: JacksonTian","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:32.003Z","type":"INVITE_SUCCESS","message":"Successfully invited JacksonTian","userId":327019,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:34.006Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: vercel","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:34.652Z","type":"INVITE_ERROR","message":"Failed to invite vercel","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:36.654Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: hkirat","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:37.405Z","type":"INVITE_SUCCESS","message":"Successfully invited hkirat","userId":8079861,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:39.408Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: MrXyfir","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:40.048Z","type":"INVITE_SUCCESS","message":"Successfully invited MrXyfir","userId":12347375,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:42.050Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: developedbyed","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:42.716Z","type":"INVITE_SUCCESS","message":"Successfully invited developedbyed","userId":31110235,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:44.718Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: phodal","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:45.360Z","type":"INVITE_SUCCESS","message":"Successfully invited phodal","userId":472311,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:47.362Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jadijadi","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:48.038Z","type":"INVITE_SUCCESS","message":"Successfully invited jadijadi","userId":1290639,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:50.039Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: xiaolai","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:50.689Z","type":"INVITE_SUCCESS","message":"Successfully invited xiaolai","userId":152970,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:52.690Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: brunosimon","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:53.355Z","type":"INVITE_SUCCESS","message":"Successfully invited brunosimon","userId":5439991,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:55.356Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: Rich-Harris","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:56.010Z","type":"INVITE_SUCCESS","message":"Successfully invited Rich-Harris","userId":1162160,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:58.012Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: shiffman","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:15:58.650Z","type":"INVITE_SUCCESS","message":"Successfully invited shiffman","userId":191758,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:00.652Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jeresig","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:01.394Z","type":"INVITE_SUCCESS","message":"Successfully invited jeresig","userId":1615,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:03.396Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: loiane","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:04.093Z","type":"INVITE_SUCCESS","message":"Successfully invited loiane","userId":59545,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:06.094Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: brahmGAN","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:06.688Z","type":"INVITE_ERROR","message":"Failed to invite brahmGAN","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:08.690Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: Asabeneh","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:09.373Z","type":"INVITE_SUCCESS","message":"Successfully invited Asabeneh","userId":9008063,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:11.376Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: vuejs","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:11.960Z","type":"INVITE_ERROR","message":"Failed to invite vuejs","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:13.962Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: justjavac","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:14.618Z","type":"INVITE_SUCCESS","message":"Successfully invited justjavac","userId":359395,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:16.619Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: JeffreyWay","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:17.260Z","type":"INVITE_SUCCESS","message":"Successfully invited JeffreyWay","userId":183223,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:19.263Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: cs50","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:19.864Z","type":"INVITE_ERROR","message":"Failed to invite cs50","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:21.867Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: codingforentrepreneurs","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:22.478Z","type":"INVITE_SUCCESS","message":"Successfully invited codingforentrepreneurs","userId":8030945,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:24.479Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jlord","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:25.098Z","type":"INVITE_SUCCESS","message":"Successfully invited jlord","userId":1305617,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:27.099Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: maykbrito","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:27.753Z","type":"INVITE_SUCCESS","message":"Successfully invited maykbrito","userId":6643122,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:29.755Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: LeaVerou","searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:16:30.386Z","type":"INVITE_SUCCESS","message":"Successfully invited LeaVerou","userId":175836,"searchTerm":"language:JavaScript followers:>50"}
+{"timestamp":"2025-05-07T01:17:15.904Z","type":"RATE_LIMIT","message":"Current rate limits","core":{"limit":5000,"used":218,"remaining":4782,"reset":1746583449},"search":{"limit":30,"used":0,"remaining":30,"reset":1746580695}}
+{"timestamp":"2025-05-07T01:17:15.910Z","type":"SEARCH","message":"Searching users with term: language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:16.175Z","type":"RATE_LIMIT","message":"Current rate limits","core":{"limit":5000,"used":218,"remaining":4782,"reset":1746583449},"search":{"limit":30,"used":0,"remaining":30,"reset":1746580695}}
+{"timestamp":"2025-05-07T01:17:16.573Z","type":"SEARCH_RESULTS","message":"Found users","total":100,"new":97}
+{"timestamp":"2025-05-07T01:17:16.575Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: karpathy","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:17.201Z","type":"INVITE_SUCCESS","message":"Successfully invited karpathy","userId":241138,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:19.204Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: openai","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:19.941Z","type":"INVITE_ERROR","message":"Failed to invite openai","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:21.944Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: rafaballerini","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:22.595Z","type":"INVITE_SUCCESS","message":"Successfully invited rafaballerini","userId":54322854,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:24.596Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: google","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:25.232Z","type":"INVITE_ERROR","message":"Failed to invite google","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:27.235Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: huggingface","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:27.935Z","type":"INVITE_ERROR","message":"Failed to invite huggingface","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:29.939Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: geohot","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:30.641Z","type":"INVITE_SUCCESS","message":"Successfully invited geohot","userId":72895,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:32.643Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: michaelliao","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:33.299Z","type":"INVITE_SUCCESS","message":"Successfully invited michaelliao","userId":470058,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:35.302Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: llSourcell","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:35.969Z","type":"INVITE_SUCCESS","message":"Successfully invited llSourcell","userId":1279609,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:37.971Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: 3b1b","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:38.606Z","type":"INVITE_SUCCESS","message":"Successfully invited 3b1b","userId":11601040,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:40.608Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: krishnaik06","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:41.250Z","type":"INVITE_SUCCESS","message":"Successfully invited krishnaik06","userId":20041231,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:43.251Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: taylorotwell","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:44.014Z","type":"INVITE_SUCCESS","message":"Successfully invited taylorotwell","userId":463230,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:46.016Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: ry","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:46.742Z","type":"INVITE_SUCCESS","message":"Successfully invited ry","userId":80,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:48.744Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: kennethreitz","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:49.367Z","type":"INVITE_SUCCESS","message":"Successfully invited kennethreitz","userId":119893,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:51.369Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: rasbt","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:52.068Z","type":"INVITE_SUCCESS","message":"Successfully invited rasbt","userId":5618407,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:54.073Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: facebookresearch","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:54.715Z","type":"INVITE_ERROR","message":"Failed to invite facebookresearch","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:56.717Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: tiangolo","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:57.387Z","type":"INVITE_SUCCESS","message":"Successfully invited tiangolo","userId":1326112,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:17:59.389Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: buckyroberts","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:00.070Z","type":"INVITE_SUCCESS","message":"Successfully invited buckyroberts","userId":8547538,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:02.072Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: python","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:02.651Z","type":"INVITE_ERROR","message":"Failed to invite python","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:04.653Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jwasham","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:05.393Z","type":"INVITE_SUCCESS","message":"Successfully invited jwasham","userId":3771963,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:07.395Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: gvanrossum","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:08.055Z","type":"INVITE_SUCCESS","message":"Successfully invited gvanrossum","userId":2894642,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:10.057Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: techwithtim","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:10.729Z","type":"INVITE_SUCCESS","message":"Successfully invited techwithtim","userId":35348871,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:12.731Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: elyxdev","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:13.380Z","type":"INVITE_SUCCESS","message":"Successfully invited elyxdev","userId":151476172,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:15.304Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: mitsuhiko","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:15.976Z","type":"INVITE_SUCCESS","message":"Successfully invited mitsuhiko","userId":7396,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:17.978Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: donnemartin","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:18.618Z","type":"INVITE_SUCCESS","message":"Successfully invited donnemartin","userId":5458997,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:20.620Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: programthink","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:21.312Z","type":"INVITE_SUCCESS","message":"Successfully invited programthink","userId":4027957,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:23.313Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: MorvanZhou","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:24.086Z","type":"INVITE_SUCCESS","message":"Successfully invited MorvanZhou","userId":19408436,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:26.089Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: BEPb","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:26.749Z","type":"INVITE_SUCCESS","message":"Successfully invited BEPb","userId":57312267,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:28.752Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: Visualize-ML","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:29.370Z","type":"INVITE_SUCCESS","message":"Successfully invited Visualize-ML","userId":105787223,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:31.372Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: lllyasviel","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:31.986Z","type":"INVITE_SUCCESS","message":"Successfully invited lllyasviel","userId":19834515,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:33.987Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: liyupi","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:34.621Z","type":"INVITE_SUCCESS","message":"Successfully invited liyupi","userId":26037703,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:36.623Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: tensorflow","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:37.284Z","type":"INVITE_ERROR","message":"Failed to invite tensorflow","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:39.285Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jakevdp","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:39.984Z","type":"INVITE_SUCCESS","message":"Successfully invited jakevdp","userId":781659,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:41.986Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: chiphuyen","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:42.634Z","type":"INVITE_SUCCESS","message":"Successfully invited chiphuyen","userId":11997567,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:44.635Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: fchollet","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:45.290Z","type":"INVITE_SUCCESS","message":"Successfully invited fchollet","userId":710255,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:47.292Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: ageron","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:47.947Z","type":"INVITE_SUCCESS","message":"Successfully invited ageron","userId":76661,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:49.948Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: eust-w","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:50.582Z","type":"INVITE_SUCCESS","message":"Successfully invited eust-w","userId":39115651,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:52.584Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: wesm","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:53.323Z","type":"INVITE_SUCCESS","message":"Successfully invited wesm","userId":329591,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:55.325Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: aws-samples","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:56.027Z","type":"INVITE_ERROR","message":"Failed to invite aws-samples","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:58.030Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: goodfeli","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:18:58.705Z","type":"INVITE_SUCCESS","message":"Successfully invited goodfeli","userId":387866,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:00.706Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: t3dotgg","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:01.360Z","type":"INVITE_SUCCESS","message":"Successfully invited t3dotgg","userId":6751787,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:03.362Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: leerob","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:04.049Z","type":"INVITE_SUCCESS","message":"Successfully invited leerob","userId":9113740,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:06.051Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: home-assistant","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:06.637Z","type":"INVITE_ERROR","message":"Failed to invite home-assistant","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:08.638Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: GoogleCloudPlatform","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:09.283Z","type":"INVITE_ERROR","message":"Failed to invite GoogleCloudPlatform","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:11.285Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: fengdu78","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:11.926Z","type":"INVITE_SUCCESS","message":"Successfully invited fengdu78","userId":26119052,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:13.927Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: breakwa11","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:14.690Z","type":"INVITE_SUCCESS","message":"Successfully invited breakwa11","userId":8436963,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:16.692Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: CoreyMSchafer","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:17.360Z","type":"INVITE_SUCCESS","message":"Successfully invited CoreyMSchafer","userId":4048251,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:19.362Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: Stability-AI","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:19.970Z","type":"INVITE_ERROR","message":"Failed to invite Stability-AI","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:21.971Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: angusshire","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:22.641Z","type":"INVITE_SUCCESS","message":"Successfully invited angusshire","userId":5877145,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:24.643Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: miguelgrinberg","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:25.312Z","type":"INVITE_SUCCESS","message":"Successfully invited miguelgrinberg","userId":2715854,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:27.313Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: george0st","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:27.998Z","type":"INVITE_SUCCESS","message":"Successfully invited george0st","userId":95856749,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:29.999Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: flipperdevices","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:30.689Z","type":"INVITE_ERROR","message":"Failed to invite flipperdevices","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:32.693Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: google-research","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:33.387Z","type":"INVITE_ERROR","message":"Failed to invite google-research","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:35.389Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: JohnHammond","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:36.063Z","type":"INVITE_SUCCESS","message":"Successfully invited JohnHammond","userId":6288722,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:38.065Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jrohitofficial","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:38.732Z","type":"INVITE_SUCCESS","message":"Successfully invited jrohitofficial","userId":84499372,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:40.733Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: htr-tech","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:41.439Z","type":"INVITE_SUCCESS","message":"Successfully invited htr-tech","userId":56682134,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:43.440Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: bojone","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:44.133Z","type":"INVITE_SUCCESS","message":"Successfully invited bojone","userId":9159613,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:46.135Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: mnielsen","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:46.766Z","type":"INVITE_SUCCESS","message":"Successfully invited mnielsen","userId":52171,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:48.769Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: pytorch","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:49.385Z","type":"INVITE_ERROR","message":"Failed to invite pytorch","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:51.387Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: amueller","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:52.054Z","type":"INVITE_SUCCESS","message":"Successfully invited amueller","userId":449558,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:54.055Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jhaddix","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:54.791Z","type":"INVITE_SUCCESS","message":"Successfully invited jhaddix","userId":3488554,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:56.792Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: THUDM","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:57.472Z","type":"INVITE_ERROR","message":"Failed to invite THUDM","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:19:59.475Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: replicate","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:00.102Z","type":"INVITE_ERROR","message":"Failed to invite replicate","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee must be a user\"}","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:02.104Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jvns","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:02.747Z","type":"INVITE_SUCCESS","message":"Successfully invited jvns","userId":817739,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:04.748Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: meliksahyorulmazlar","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:05.446Z","type":"INVITE_SUCCESS","message":"Successfully invited meliksahyorulmazlar","userId":141827156,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:07.447Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: lilianweng","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:08.219Z","type":"INVITE_SUCCESS","message":"Successfully invited lilianweng","userId":901179,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:10.220Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: alex","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:10.854Z","type":"INVITE_SUCCESS","message":"Successfully invited alex","userId":772,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:12.856Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: ChristianLempa","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:13.492Z","type":"INVITE_SUCCESS","message":"Successfully invited ChristianLempa","userId":28359525,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:15.494Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: AllenDowney","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:16.182Z","type":"INVITE_SUCCESS","message":"Successfully invited AllenDowney","userId":1882093,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:18.183Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: Sentdex","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:18.817Z","type":"INVITE_SUCCESS","message":"Successfully invited Sentdex","userId":5905296,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:20.819Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: 521xueweihan","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:21.469Z","type":"INVITE_SUCCESS","message":"Successfully invited 521xueweihan","userId":8255800,"searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:23.471Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: pjreddie","searchTerm":"language:Python followers:>50"}
+{"timestamp":"2025-05-07T01:20:24.138Z","type":"INVITE_SUCCESS","message":"Successfully invited pjreddie","userId":302108,"searchTerm":"language:Python followers:>50"}

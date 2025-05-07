@@ -1,0 +1,80 @@
+# GitHub Organization Invitation Commands
+# Each command is set to invite up to 100 users to stay within safe limits
+
+# === Brazil-based Developers ===
+# Java developers with good following
+npm run invite "location:Brazil language:Java followers:>50" 100
+
+# Python developers with good following
+npm run invite "location:Brazil language:Python followers:>50" 100
+
+# JavaScript developers with good following
+npm run invite "location:Brazil language:JavaScript followers:>50" 100
+
+# === Active Contributors ===
+# Users who contribute to popular frameworks
+npm run invite "language:Java stars:>10 followers:>50" 100
+npm run invite "spring-boot in:readme followers:>30" 100
+
+# === By Technology Interest ===
+# Spring Framework enthusiasts
+npm run invite "spring framework in:bio followers:>30" 100
+
+# Microservices developers
+npm run invite "microservices in:bio followers:>30" 100
+
+# Cloud developers
+npm run invite "aws OR azure OR gcp in:bio followers:>30" 100
+
+# === By Activity Level ===
+# Active open source contributors
+npm run invite "followers:>100 repos:>10" 100
+
+# === By Location and Language Combinations ===
+# Multi-language developers from different regions
+npm run invite "location:India language:Java followers:>50" 100
+npm run invite "location:Germany language:Java followers:>50" 100
+npm run invite "location:USA language:Java followers:>50" 100
+
+# === By Specific Interests ===
+# DevOps practitioners
+npm run invite "devops in:bio followers:>30" 100
+
+# Full-stack developers
+npm run invite "full-stack OR fullstack in:bio followers:>30" 100
+
+# === Tips ===
+# 1. Run commands with a few minutes gap between them to respect rate limits
+# 2. Check stats after each run: npm run stats
+# 3. If you hit rate limits, wait for the reset time shown in the output
+# 4. Commands are set to 100 users each - adjust as needed
+# 5. Use more specific search terms for better targeting
+
+# === Example Schedule ===
+# Day 1: Run first 3 commands (300 potential invites)
+# Day 2: Run next 3 commands (300 potential invites)
+# Day 3: Run remaining commands (300 potential invites)
+
+# === Monitoring Progress ===
+# Check invitation statistics:
+npm run stats
+
+# === Custom Search Templates ===
+# Replace TERM with specific values:
+npm run invite "TERM in:bio followers:>30" 100
+npm run invite "location:COUNTRY language:LANGUAGE followers:>50" 100
+
+# === Advanced Filters ===
+# Combine multiple criteria:
+npm run invite "language:Java location:Brazil created:>2020-01-01 followers:>50" 100
+npm run invite "language:Java location:India created:>2020-01-01 followers:>50" 100
+
+# === Organization-Specific ===
+# Target users interested in specific organizations:
+npm run invite "org:spring-projects followers:>50" 100
+npm run invite "org:apache followers:>50" 100
+
+# === Repository-Specific ===
+# Target users who interact with specific repos:
+npm run invite "repo:spring-projects/spring-boot stargazers:>5" 100
+npm run invite "repo:apache/kafka stargazers:>5" 100 

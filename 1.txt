@@ -1,0 +1,814 @@
+# GitHub Organization Invitation Management System Documentation
+Version 1.0
+Last Updated: 2024
+
+Table of Contents
+================
+
+1. Introduction
+   1.1. System Overview
+   1.2. Purpose
+   1.3. Key Features
+   1.4. Requirements
+
+2. System Architecture
+   2.1. File Structure
+   2.2. Core Components
+   2.3. Dependencies
+   2.4. Configuration
+
+3. Setup and Installation
+   3.1. Prerequisites
+   3.2. Environment Configuration
+   3.3. Initial Setup
+   3.4. File Permissions
+
+4. Core Functionality
+   4.1. User Management
+   4.2. Invitation System
+   4.3. Tracking System
+   4.4. Statistics Management
+   4.5. Error Handling
+
+5. Features in Detail
+   5.1. User Search and Filtering
+   5.2. Invitation Management
+   5.3. Team Management
+   5.4. Logging System
+   5.5. Backup System
+
+6. API Integration
+   6.1. GitHub API Usage
+   6.2. Rate Limiting
+   6.3. Authentication
+   6.4. Error Handling
+
+7. Security
+   7.1. Token Management
+   7.2. File Permissions
+   7.3. Data Protection
+   7.4. Best Practices
+
+8. Maintenance
+   8.1. Log Management
+   8.2. Backup Procedures
+   8.3. Error Recovery
+   8.4. System Updates
+
+9. Troubleshooting
+   9.1. Common Issues
+   9.2. Error Messages
+   9.3. Recovery Procedures
+   9.4. Support Contact
+
+10. Advanced Usage
+    10.1. Custom Queries
+    10.2. Automation
+    10.3. Integration
+    10.4. Scaling
+
+=================
+1. Introduction
+=================
+
+1.1. System Overview
+-------------------
+The GitHub Organization Invitation Management System is a comprehensive tool designed to automate and manage the process of inviting users to a GitHub organization. It provides robust functionality for user discovery, invitation management, and tracking while maintaining security and efficiency.
+
+1.2. Purpose
+-----------
+The system addresses the need for efficient management of GitHub organization memberships by:
+- Automating user invitations
+- Tracking invitation history
+- Preventing duplicate invitations
+- Managing team assignments
+- Providing detailed statistics
+- Ensuring security and compliance
+
+1.3. Key Features
+----------------
+- User search and filtering
+- Automated invitations
+- Team management
+- Invitation tracking
+- Statistics reporting
+- Backup and recovery
+- Rate limit handling
+- Error management
+- Security controls
+
+1.4. Requirements
+----------------
+- Node.js (v14 or higher)
+- GitHub Personal Access Token
+- Appropriate GitHub organization permissions
+- File system access rights
+- Internet connectivity
+
+=================
+2. System Architecture
+=================
+
+2.1. File Structure
+------------------
+The system uses the following key files:
+- inviteFollowers.mjs: Main application file
+- .env: Environment configuration
+- invitation_log.txt: Invitation history
+- invitation_stats.json: Statistics tracking
+- search_progress.json: Search state management
+- invited_users.json: Detailed invitation records
+
+2.2. Core Components
+------------------
+1. Invitation Manager
+   - Handles user invitations
+   - Manages rate limiting
+   - Tracks invitation history
+
+2. Search System
+   - User discovery
+   - Filtering
+   - Progress tracking
+
+3. Team Manager
+   - Team assignment
+   - Permission management
+   - Role assignment
+
+4. Logging System
+   - Activity tracking
+   - Error logging
+   - Statistics collection
+
+2.3. Dependencies
+----------------
+Required npm packages:
+- node-fetch: API requests
+- dotenv: Environment management
+- fs: File system operations
+- path: Path management
+- child_process: Process execution
+
+2.4. Configuration
+----------------
+Environment variables:
+- GITHUB_TOKEN: Personal access token
+- ORG: Organization name
+- DEFAULT_TEAM: Default team for invites
+- CONTRIBUTORS_TEAM: Contributors team name
+
+=================
+3. Setup and Installation
+=================
+
+3.1. Prerequisites
+----------------
+1. System Requirements:
+   - Node.js v14+
+   - npm or yarn
+   - Git
+   - 100MB disk space minimum
+
+2. GitHub Requirements:
+   - Organization admin access
+   - Personal access token with:
+     - admin:org
+     - read:user
+     - user:email
+
+3.2. Environment Configuration
+----------------------------
+1. Create .env file:
+```
+GITHUB_TOKEN=your_github_token
+```
+
+2. Configure organization settings:
+```javascript
+const ORG = 'Your-Organization-Name';
+const DEFAULT_TEAM = 'support';
+const CONTRIBUTORS_TEAM = 'contributors';
+```
+
+3.3. Initial Setup
+----------------
+1. Clone repository:
+```bash
+git clone <repository-url>
+cd <repository-directory>
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Initialize log files:
+```bash
+node scripts/initLogs.js
+```
+
+3.4. File Permissions
+-------------------
+Required permissions:
+- Log files: 0644 (rw-r--r--)
+- Backup directory: 0755 (rwxr-xr-x)
+- Configuration files: 0600 (rw-------)
+
+=================
+4. Core Functionality
+=================
+
+4.1. User Management
+------------------
+1. User Discovery:
+   - Search by keyword
+   - Organization scanning
+   - Repository contributor analysis
+   - Sponsor tracking
+
+2. User Validation:
+   - Account status check
+   - Previous invitation check
+   - Rate limit compliance
+   - Permission verification
+
+4.2. Invitation System
+--------------------
+1. Invitation Process:
+   - User validation
+   - Rate limit check
+   - Team assignment
+   - Invitation sending
+   - Status tracking
+
+2. Rate Limiting:
+   - 50 invites per 24 hours
+   - Configurable delays
+   - Automatic retry system
+
+4.3. Tracking System
+------------------
+1. Invitation Logging:
+   - Timestamp
+   - User information
+   - Source tracking
+   - Status updates
+
+2. Progress Tracking:
+   - Search progress
+   - Invitation counts
+   - Success rates
+   - Error tracking
+
+4.4. Statistics Management
+------------------------
+1. Tracked Metrics:
+   - Total invitations
+   - Success rate
+   - Team distribution
+   - Source analysis
+   - Time-based stats
+
+2. Reporting:
+   - Daily summaries
+   - Team reports
+   - Error reports
+   - Rate limit status
+
+4.5. Error Handling
+-----------------
+1. Error Types:
+   - API failures
+   - Rate limits
+   - Permission issues
+   - Network errors
+   - File system errors
+
+2. Recovery Procedures:
+   - Automatic retry
+   - Backup restoration
+   - Progress recovery
+   - State management
+
+=================
+5. Features in Detail
+=================
+
+5.1. User Search and Filtering
+----------------------------
+1. Search Methods:
+   - Keyword search
+   - Organization scanning
+   - Repository analysis
+   - Sponsor tracking
+   - README scanning
+
+2. Search Filters:
+   - Location
+   - Followers count
+   - Repository count
+   - Account age
+   - Activity level
+
+5.2. Invitation Management
+------------------------
+1. Invitation Process:
+   a. User Validation
+      - Account status
+      - Previous invitations
+      - Rate limit check
+   
+   b. Team Assignment
+      - Role determination
+      - Permission setting
+      - Team placement
+   
+   c. Invitation Sending
+      - API call
+      - Rate limit handling
+      - Status tracking
+   
+   d. Follow-up
+      - Status monitoring
+      - Error handling
+      - Success logging
+
+2. Rate Limit Management:
+   - Daily limit tracking
+   - Automatic pausing
+   - Queue management
+   - Retry scheduling
+
+5.3. Team Management
+------------------
+1. Team Structure:
+   - Support team
+   - Contributors team
+   - Custom teams
+
+2. Role Assignment:
+   - Direct member
+   - Team member
+   - Custom roles
+
+5.4. Logging System
+-----------------
+1. Log Types:
+   - Invitation log
+   - Error log
+   - Statistics log
+   - Progress log
+
+2. Log Management:
+   - Rotation
+   - Archival
+   - Cleanup
+   - Recovery
+
+5.5. Backup System
+----------------
+1. Backup Types:
+   - Full system backup
+   - Log backup
+   - Configuration backup
+   - State backup
+
+2. Backup Schedule:
+   - Daily backups
+   - Pre-operation backups
+   - Post-operation backups
+   - Emergency backups
+
+=================
+6. API Integration
+=================
+
+6.1. GitHub API Usage
+-------------------
+1. Endpoints Used:
+   - /orgs/{org}/invitations
+   - /users/{username}
+   - /orgs/{org}/members
+   - /search/users
+   - /graphql
+
+2. Request Handling:
+   - Authentication
+   - Rate limiting
+   - Error handling
+   - Response parsing
+
+6.2. Rate Limiting
+----------------
+1. GitHub Limits:
+   - API rate limits
+   - Search API limits
+   - Invitation limits
+   - GraphQL limits
+
+2. Handling Strategies:
+   - Request spacing
+   - Queue management
+   - Retry logic
+   - Limit tracking
+
+6.3. Authentication
+-----------------
+1. Token Management:
+   - Storage
+   - Validation
+   - Rotation
+   - Security
+
+2. Permission Scopes:
+   - admin:org
+   - read:user
+   - user:email
+   - write:org
+
+6.4. Error Handling
+-----------------
+1. API Errors:
+   - Rate limits
+   - Authentication
+   - Permission
+   - Network
+
+2. Recovery:
+   - Automatic retry
+   - Fallback options
+   - Error logging
+   - User notification
+
+=================
+7. Security
+=================
+
+7.1. Token Management
+-------------------
+1. Token Storage:
+   - Environment variables
+   - Secure storage
+   - Access control
+   - Rotation policy
+
+2. Token Security:
+   - Scope limitation
+   - Usage monitoring
+   - Exposure prevention
+   - Regular auditing
+
+7.2. File Permissions
+-------------------
+1. Permission Levels:
+   - Configuration files
+   - Log files
+   - Backup files
+   - Temporary files
+
+2. Access Control:
+   - User permissions
+   - Group permissions
+   - Special permissions
+   - Inheritance
+
+7.3. Data Protection
+------------------
+1. Sensitive Data:
+   - User information
+   - Token storage
+   - Configuration data
+   - Log contents
+
+2. Protection Measures:
+   - Encryption
+   - Access control
+   - Data sanitization
+   - Secure deletion
+
+7.4. Best Practices
+-----------------
+1. Security Guidelines:
+   - Token handling
+   - File permissions
+   - Data protection
+   - Error handling
+
+2. Implementation:
+   - Regular audits
+   - Security updates
+   - Policy enforcement
+   - Incident response
+
+=================
+8. Maintenance
+=================
+
+8.1. Log Management
+-----------------
+1. Log Rotation:
+   - Daily rotation
+   - Size-based rotation
+   - Compression
+   - Archival
+
+2. Log Cleanup:
+   - Old log removal
+   - Space management
+   - Data retention
+   - Recovery options
+
+8.2. Backup Procedures
+--------------------
+1. Backup Types:
+   - Full system
+   - Configuration
+   - Logs
+   - State data
+
+2. Backup Schedule:
+   - Daily backups
+   - Pre-operation
+   - Post-operation
+   - Emergency
+
+8.3. Error Recovery
+-----------------
+1. Recovery Procedures:
+   - File restoration
+   - State recovery
+   - Configuration reset
+   - Emergency procedures
+
+2. Data Integrity:
+   - Validation
+   - Consistency checks
+   - Repair procedures
+   - Verification
+
+8.4. System Updates
+-----------------
+1. Update Process:
+   - Version control
+   - Dependency updates
+   - Security patches
+   - Feature updates
+
+2. Update Verification:
+   - Testing
+   - Validation
+   - Rollback procedures
+   - Documentation
+
+=================
+9. Troubleshooting
+=================
+
+9.1. Common Issues
+----------------
+1. API Issues:
+   - Rate limiting
+   - Authentication
+   - Permission errors
+   - Network problems
+
+2. System Issues:
+   - File permissions
+   - Disk space
+   - Memory usage
+   - Process errors
+
+9.2. Error Messages
+-----------------
+1. API Errors:
+   - 401: Authentication
+   - 403: Rate limit
+   - 404: Not found
+   - 422: Validation
+
+2. System Errors:
+   - File access
+   - Permission denied
+   - Out of memory
+   - Process failure
+
+9.3. Recovery Procedures
+----------------------
+1. API Recovery:
+   - Rate limit wait
+   - Token refresh
+   - Request retry
+   - Alternative methods
+
+2. System Recovery:
+   - File restoration
+   - Permission reset
+   - Cache clear
+   - Process restart
+
+9.4. Support Contact
+------------------
+For additional support:
+- GitHub Issues
+- Documentation
+- Community forums
+- Direct support
+
+=================
+10. Advanced Usage
+=================
+
+10.1. Custom Queries
+------------------
+1. Search Queries:
+   - Complex filters
+   - Multiple criteria
+   - Custom logic
+   - Advanced sorting
+
+2. Query Examples:
+```javascript
+// Location-based search
+location:Germany language:javascript followers:>100
+
+// Activity-based search
+created:>2020-01-01 repos:>10 followers:>50
+
+// Combined search
+location:India language:python followers:>500 repos:>20
+```
+
+10.2. Automation
+--------------
+1. Scheduled Tasks:
+   - Daily invitations
+   - Log rotation
+   - Backup creation
+   - Stats generation
+
+2. Integration:
+   - CI/CD pipelines
+   - Webhooks
+   - Event triggers
+   - Custom scripts
+
+10.3. Integration
+---------------
+1. External Systems:
+   - CI/CD systems
+   - Monitoring tools
+   - Analytics platforms
+   - Notification systems
+
+2. API Integration:
+   - Custom endpoints
+   - Webhooks
+   - Event handling
+   - Data exchange
+
+10.4. Scaling
+-----------
+1. Performance:
+   - Request optimization
+   - Caching
+   - Queue management
+   - Resource allocation
+
+2. Architecture:
+   - Modular design
+   - Extensibility
+   - Configuration
+   - Monitoring
+
+=================
+Appendix A: Configuration Reference
+=================
+
+A.1. Environment Variables
+------------------------
+```
+GITHUB_TOKEN=your_github_token
+ORG=organization_name
+DEFAULT_TEAM=team_name
+CONTRIBUTORS_TEAM=team_name
+```
+
+A.2. Constants
+------------
+```javascript
+const DELAY_BETWEEN_INVITES = 2000;
+const MAX_FAILED_INVITES = 20;
+const RETRY_DELAY = 30000;
+```
+
+A.3. File Paths
+-------------
+```javascript
+const LOG_FILE = 'invitation_log.txt';
+const INVITATION_STATS_FILE = 'invitation_stats.json';
+const SEARCH_PROGRESS_FILE = 'search_progress.json';
+```
+
+=================
+Appendix B: API Reference
+=================
+
+B.1. GitHub API Endpoints
+-----------------------
+1. Users
+   - GET /users/{username}
+   - GET /users/{username}/followers
+   - GET /users/{username}/sponsoring
+
+2. Organizations
+   - GET /orgs/{org}/members
+   - POST /orgs/{org}/invitations
+   - GET /orgs/{org}/teams
+
+B.2. GraphQL Queries
+------------------
+1. Sponsors Query
+```graphql
+query($login: String!, $after: String) {
+  repositoryOwner(login: $login) {
+    ... on Organization {
+      sponsorshipsAsMaintainer(first: 100, after: $after) {
+        nodes {
+          sponsorEntity {
+            ... on User {
+              login
+              type: __typename
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  }
+}
+```
+
+=================
+Appendix C: Error Codes
+=================
+
+C.1. System Error Codes
+---------------------
+1. File Operations
+   - FS001: Permission denied
+   - FS002: File not found
+   - FS003: Disk full
+   - FS004: Read error
+
+2. API Errors
+   - API001: Rate limit
+   - API002: Authentication
+   - API003: Network error
+   - API004: Timeout
+
+=================
+Appendix D: Best Practices
+=================
+
+D.1. Code Style
+-------------
+1. Naming Conventions
+2. Error Handling
+3. Documentation
+4. Testing
+
+D.2. Security
+-----------
+1. Token Management
+2. File Permissions
+3. Data Protection
+4. Error Handling
+
+=================
+Appendix E: Changelog
+=================
+
+Version 1.0 (2024)
+-----------------
+- Initial release
+- Core functionality
+- Documentation
+- Security features
+
+=================
+Appendix F: Contributors
+=================
+
+- System Architects
+- Developers
+- Documentation Writers
+- Testers
+
+=================
+End of Documentation
+================= 
