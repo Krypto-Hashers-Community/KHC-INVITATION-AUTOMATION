@@ -1,9 +1,9 @@
 {
-  "totalInvites": 153,
+  "totalInvites": 172,
   "searchTerms": {
     "location:india language:python followers:>100": 50,
     "language:JavaScript followers:>50": 47,
-    "language:Python followers:>50": 56
+    "language:Python followers:>50": 75
   },
-  "lastInvitedAt": "2025-05-07T01:20:24.138Z"
+  "lastInvitedAt": "2025-05-07T01:21:30.914Z"
 }
