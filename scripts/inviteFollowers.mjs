@@ -5,7 +5,6 @@ import { createInterface } from 'readline';
 import { writeFileSync, readFileSync, appendFileSync, existsSync, mkdirSync, copyFileSync, unlinkSync } from 'fs';
 import { join, dirname, resolve } from 'path';
 import { execSync } from 'child_process';
-import { readdirSync, basename } from 'fs';
 
 // Initialize dotenv
 config();
@@ -34,6 +33,20 @@ const FOLLOWED_USERS_FILE = 'followed_users.json';
 // Add these constants at the top with other constants
 const SCAN_PROGRESS_FILE = 'scan_progress.json';
 const RETRY_DELAY = 30000; // 30 seconds delay for retrying on connection failure
+
+// Add these constants at the top with other constants
+const TEAMS = {
+  'support': {
+    name: 'Support Team',
+    slug: 'support',
+    description: 'Community support and help team'
+  },
+  'contributors': {
+    name: 'Contributors Team',
+    slug: 'contributors',
+    description: 'Active contributors to the community'
+  }
+};
 
 // Ensure log files exist
 if (!existsSync(LOG_FILE)) {
@@ -511,74 +524,52 @@ function getLastSearchFromLog() {
   return match ? match[1] : null;
 }
 
-// Modify the appendToLog function to ensure we preserve existing data
+// Add this function near the top with other utility functions
 function appendToLog(sourceUsername, invitedUser) {
   const timestamp = new Date().toISOString();
   const logEntry = `${timestamp} - ${sourceUsername} - ${invitedUser}\n`;
   
+  console.log('\n📝 Attempting to write to log file:', LOG_FILE);
+  console.log('   Entry:', logEntry.trim());
+  
   try {
-    // Create backup of current log first if it exists
-    if (existsSync(LOG_FILE)) {
-      copyFileSync(LOG_FILE, `${LOG_FILE}.backup`);
-    }
-
-    // Ensure directory exists
+    // Check if directory exists, create if not
     const logDir = dirname(LOG_FILE);
     if (!existsSync(logDir)) {
+      console.log('   Creating log directory...');
       mkdirSync(logDir, { recursive: true });
     }
-
-    // Append to log file (create if doesn't exist)
+    
+    // Check if file exists, create if not
     if (!existsSync(LOG_FILE)) {
+      console.log('   Creating new log file...');
       writeFileSync(LOG_FILE, '');
     }
-    appendFileSync(LOG_FILE, logEntry);
-
-    // Append to JSON file while preserving existing entries
-    let jsonEntries = [];
-    if (existsSync('invited_users.json')) {
-      try {
-        const content = readFileSync('invited_users.json', 'utf8');
-        jsonEntries = content.split('\n')
-          .filter(line => line.trim())
-          .map(line => JSON.parse(line));
-      } catch (error) {
-        console.error('Warning: Error reading existing invited_users.json');
-      }
-    }
     
-    // Add new entry
-    jsonEntries.push({
-      timestamp,
-      source: sourceUsername,
-      username: invitedUser,
-      status: 'invited'
-    });
-
-    // Write back all entries
-    writeFileSync('invited_users.json', 
-      jsonEntries.map(entry => JSON.stringify(entry)).join('\n') + '\n'
-    );
-
+    // Write to file
+    appendFileSync(LOG_FILE, logEntry, { encoding: 'utf8', flag: 'a' });
+    console.log('   ✅ Successfully wrote to log file');
+    
     // Verify the write
     const lastLine = readFileSync(LOG_FILE, 'utf8').split('\n').filter(Boolean).pop();
     if (lastLine !== logEntry.trim()) {
       throw new Error('Log entry verification failed');
     }
-
-    console.log('\n📝 Successfully logged invitation');
   } catch (error) {
-    console.error('\n❌ Error writing to log:', error.message);
+    console.error('   ❌ Error writing to log file:', error.message);
+    console.error('   File path:', resolve(LOG_FILE));
+    console.error('   Current directory:', process.cwd());
     
-    // Try to restore from backup if we have one
-    if (existsSync(`${LOG_FILE}.backup`)) {
-      try {
-        copyFileSync(`${LOG_FILE}.backup`, LOG_FILE);
-        appendFileSync(LOG_FILE, logEntry);
-        console.log('✅ Restored from backup and added new entry');
-      } catch (backupError) {
-        console.error('❌ Failed to restore from backup:', backupError.message);
-      }
+    // Try alternative logging method
+    try {
+      console.log('   Attempting alternative logging method...');
+      const tempPath = join(process.cwd(), 'invitation_log_temp.txt');
+      appendFileSync(tempPath, logEntry);
+      copyFileSync(tempPath, LOG_FILE);
+      console.log('   ✅ Successfully wrote using alternative method');
+    } catch (altError) {
+      console.error('   ❌ Alternative logging also failed:', altError.message);
+      throw error; // Re-throw the original error
     }
   }
 }
@@ -685,60 +676,43 @@ function buildGitHubSearchUrl(filters, page) {
   return `https://api.github.com/search/users?q=${encodedQuery}&page=${page}`;
 }
 
-// Modify the searchUsersByKeyword function
-async function searchUsersByKeyword(query, startPage = 0, getAllUsers = false) {
-  console.log(`\n🔍 Searching for users matching: "${query}"`);
-  let allUsers = new Set();
-  let page = startPage || 1;
+// Add the searchUsersByKeyword function
+async function searchUsersByKeyword(keyword) {
+  console.log(`\n🔍 Searching for users with keyword: "${keyword}"...`);
+  const users = [];
+  let page = 1;
   let hasMore = true;
-  let startTime = Date.now();
-  let totalResults = 0;
 
   while (hasMore) {
     try {
-      const res = await fetch(
-        `https://api.github.com/search/users?q=${encodeURIComponent(query)}&page=${page}&per_page=100`,
-        { headers }
+      const response = await fetch(
+        `https://api.github.com/search/users?q=${encodeURIComponent(keyword)}&page=${page}&per_page=100`,
+        {
+          headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        }
       );
 
-      if (!res.ok) {
-        const error = await res.json();
-        console.error('❌ Search failed:', error.message);
-        break;
+      if (!response.ok) {
+        throw new Error(`GitHub API error: ${response.status}`);
       }
 
-      const data = await res.json();
-      totalResults = data.total_count;
-      
-      if (data.items.length === 0 || (!getAllUsers && allUsers.size >= 500)) {
+      const data = await response.json();
+      if (data.items.length === 0) {
         hasMore = false;
       } else {
-        data.items.forEach(user => allUsers.add(user.login));
-        console.log(`   Found ${allUsers.size}/${totalResults} users...`);
+        users.push(...data.items.map(item => item.login));
         page++;
-        
-        // Add delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 2000));
       }
     } catch (error) {
-      console.error('❌ Error:', error.message);
-      break;
+      console.error('❌ Error searching users:', error.message);
+      hasMore = false;
     }
   }
 
-  const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(`\n✅ Found ${allUsers.size} users in ${totalTime}s`);
-  
-  // Save search progress
-  searchProgress = {
-    lastSearch: query,
-    completedCount: allUsers.size,
-    totalCount: totalResults,
-    remainingUsers: Array.from(allUsers)
-  };
-  updateSearchProgress();
-
-  return Array.from(allUsers);
+  return users;
 }
 
 async function getRepoContributors(repoUrl) {
@@ -973,66 +947,7 @@ async function inviteUser(username, sourceUsername, targetOrg, forceInvite = fal
   }
 }
 
-// Modify commitLogFiles to be more careful with existing data
-async function commitLogFiles() {
-  try {
-    const timestamp = new Date().toISOString().split('T')[0];
-    const message = `Update invitation logs - ${timestamp}`;
-    
-    console.log('\n📤 Committing log files to repository...');
-    
-    // First verify all files exist and have content
-    const filesToCommit = [
-      LOG_FILE,
-      'invited_users.json',
-      'invitation_stats.json',
-      `${LOG_FILE}.backup`,
-      'search_progress.json'
-    ];
-
-    // Check each file before staging
-    for (const file of filesToCommit) {
-      if (existsSync(file)) {
-        try {
-          // Read file content to verify it's not empty or corrupted
-          const content = readFileSync(file, 'utf8');
-          if (content.trim()) {
-            execSync(`git add "${file}"`, { stdio: 'pipe' });
-            console.log(`✅ Staged ${file}`);
-          } else {
-            console.log(`⚠️ Skipping empty file: ${file}`);
-          }
-        } catch (error) {
-          console.error(`❌ Error with ${file}:`, error.message);
-        }
-      }
-    }
-
-    // Check if there are any changes to commit
-    const status = execSync('git status --porcelain', { encoding: 'utf8' });
-    if (!status.trim()) {
-      console.log('ℹ️ No changes to commit');
-      return;
-    }
-
-    // Commit changes
-    try {
-      execSync(`git commit -m "${message}"`, { stdio: 'pipe' });
-      console.log('✅ Successfully committed changes');
-
-      // Push changes
-      console.log('📤 Pushing changes to remote...');
-      execSync('git push origin master', { stdio: 'pipe' });
-      console.log('✅ Successfully pushed changes');
-    } catch (error) {
-      console.error('❌ Failed to commit/push changes:', error.message);
-    }
-  } catch (error) {
-    console.error('❌ Error during git operations:', error.message);
-  }
-}
-
-// Modify handleSponsorInvitations to include commit after success
+// Modify the handleSponsorInvitations function
 async function handleSponsorInvitations(followers, sourceUsername, targetOrg) {
   if (followers.length === 0) {
     console.log('✨ No users found!');
@@ -1057,13 +972,29 @@ async function handleSponsorInvitations(followers, sourceUsername, targetOrg) {
     return false;
   }
 
-  console.log(`\n🎯 Found ${newFollowers.length} new user${newFollowers.length === 1 ? '' : 's'} to invite to the Support Team:`);
+  console.log(`\n🎯 Found ${newFollowers.length} new user${newFollowers.length === 1 ? '' : 's'} to invite:`);
   for (const user of newFollowers) {
     console.log(`   • @${user}`);
   }
 
+  // Show team options
+  console.log('\n📋 Available teams:');
+  Object.entries(TEAMS).forEach(([key, team]) => {
+    console.log(`   ${key}. ${team.name} - ${team.description}`);
+  });
+
+  const teamChoice = await new Promise(resolve => {
+    rl.question('\nWhich team would you like to invite them to? (support/contributors): ', resolve);
+  });
+
+  const selectedTeam = TEAMS[teamChoice.toLowerCase()];
+  if (!selectedTeam) {
+    console.error('❌ Invalid team choice. Please choose "support" or "contributors".');
+    return false;
+  }
+
   const confirm = await new Promise(resolve => {
-    rl.question(`\nDo you want to proceed with sending invites to ${targetOrg} Support Team? (yes/no): `, resolve);
+    rl.question(`\nDo you want to proceed with sending invites to ${targetOrg} ${selectedTeam.name}? (yes/no): `, resolve);
   });
 
   if (confirm.toLowerCase() !== 'yes') {
@@ -1076,10 +1007,10 @@ async function handleSponsorInvitations(followers, sourceUsername, targetOrg) {
   });
 
   // Get team ID first
-  console.log('\n🔍 Fetching Support Team information...');
-  const teamId = await getTeamId(targetOrg, DEFAULT_TEAM);
+  console.log(`\n🔍 Fetching ${selectedTeam.name} information...`);
+  const teamId = await getTeamId(targetOrg, selectedTeam.slug);
   if (!teamId) {
-    console.error('❌ Could not find Support Team. Please check the team URL and try again.');
+    console.error(`❌ Could not find ${selectedTeam.name}. Please check the team URL and try again.`);
     return false;
   }
 
@@ -1093,15 +1024,10 @@ async function handleSponsorInvitations(followers, sourceUsername, targetOrg) {
 
   console.log('\n✨ All done!');
   console.log(`📊 Stats for this session:`);
-  console.log(`   • Successfully invited: ${successfulInvites} users to Support Team`);
+  console.log(`   • Successfully invited: ${successfulInvites} users to ${selectedTeam.name}`);
   console.log(`   • Total invites sent: ${invitationStats.totalInvites}`);
   console.log(`   • Invites in last 24h: ${invitationStats.last24Hours}`);
   console.log(`   • Pending invites: ${invitationStats.pendingInvites}`);
-
-  // Add commit operation if there were successful invites
-  if (successfulInvites > 0) {
-    await commitLogFiles();
-  }
 
   return successfulInvites > 0;
 }
@@ -1349,7 +1275,7 @@ async function inviteUsersFromReadme() {
   }
 }
 
-// Add this function before handleSponsorInvitations
+// Add this function before getSponsors
 function extractGitHubUsername(url) {
   try {
     // Handle both URLs and direct usernames
@@ -1368,291 +1294,51 @@ function extractGitHubUsername(url) {
   }
 }
 
-// Add this function before handleSponsorInvitations
-async function getSponsors(username) {
-  console.log(`\n📥 Fetching sponsors of @${username}...`);
-  let allSponsors = new Set();
-  let hasNextPage = true;
-  let endCursor = null;
-  let startTime = Date.now();
-
-  const query = `
-    query($login: String!, $after: String) {
-      repositoryOwner(login: $login) {
-        ... on Organization {
-          sponsorshipsAsMaintainer(first: 100, after: $after) {
-            nodes {
-              sponsorEntity {
-                ... on User {
-                  login
-                  type: __typename
-                }
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-          }
-          sponsors(first: 100, after: $after) {
-            nodes {
-              ... on User {
-                login
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-          }
-        }
-        ... on User {
-          sponsorshipsAsMaintainer(first: 100, after: $after) {
-            nodes {
-              sponsorEntity {
-                ... on User {
-                  login
-                  type: __typename
-                }
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-          }
-        }
-      }
-    }
-  `;
-
-  while (hasNextPage) {
-    try {
-      const res = await fetch('https://api.github.com/graphql', {
-        method: 'POST',
-        headers: {
-          'Authorization': `bearer ${GITHUB_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query,
-          variables: {
-            login: username,
-            after: endCursor
-          }
-        })
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        console.error('❌ Failed to fetch sponsors:', error.message);
-        break;
-      }
-
-      const data = await res.json();
-      
-      if (data.errors) {
-        console.error('❌ GraphQL Error:', data.errors[0].message);
-        break;
-      }
-
-      const repoOwner = data.data?.repositoryOwner;
-      if (!repoOwner) {
-        console.log('❌ Account not found');
-        break;
-      }
-
-      // Handle organization sponsors
-      const orgSponsors = repoOwner.sponsors?.nodes || [];
-      orgSponsors.forEach(sponsor => {
-        if (sponsor?.login) {
-          allSponsors.add(sponsor.login);
-        }
-      });
-
-      // Handle maintainer sponsorships
-      const sponsorships = repoOwner.sponsorshipsAsMaintainer?.nodes || [];
-      sponsorships.forEach(node => {
-        if (node.sponsorEntity?.type === 'User') {
-          allSponsors.add(node.sponsorEntity.login);
-        }
-      });
-
-      // Update pagination info based on either query
-      hasNextPage = repoOwner.sponsors?.pageInfo.hasNextPage || 
-                   repoOwner.sponsorshipsAsMaintainer?.pageInfo.hasNextPage || 
-                   false;
-      endCursor = repoOwner.sponsors?.pageInfo.endCursor || 
-                 repoOwner.sponsorshipsAsMaintainer?.pageInfo.endCursor;
-
-      // Add delay to avoid rate limiting
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    } catch (error) {
-      console.error('❌ Error:', error.message);
-      break;
-    }
-  }
-
-  const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(`\n✅ Found ${allSponsors.size} sponsors in ${totalTime}s`);
-  
-  // Log all found sponsors for debugging
-  if (allSponsors.size > 0) {
-    console.log('\nFound sponsors:');
-    Array.from(allSponsors).forEach(sponsor => {
-      console.log(`  • @${sponsor}`);
+// Add these functions before the main function
+async function followUser(username) {
+  try {
+    const res = await fetch(`https://api.github.com/user/following/${username}`, {
+      method: 'PUT',
+      headers
     });
-  }
-  
-  return Array.from(allSponsors);
-}
 
-// Add this function before getSponsoring
-async function getSponsoring(username) {
-  console.log(`\n📥 Fetching users/orgs that @${username} is sponsoring...`);
-  let allSponsoring = new Set();
-  let page = 1;
-  let hasMore = true;
-  let startTime = Date.now();
-
-  while (hasMore) {
-    try {
-      const res = await fetch(`https://api.github.com/users/${username}/sponsoring?per_page=100&page=${page}`, { headers });
-      
-      if (!res.ok) {
-        if (res.status === 404) {
-          console.log('❌ Sponsoring data not found. Make sure the account exists.');
-          break;
-        }
-        const error = await res.json();
-        console.error('❌ Failed to fetch sponsoring:', error.message);
-        break;
-      }
-
-      const sponsoring = await res.json();
-      if (sponsoring.length === 0) {
-        hasMore = false;
-      } else {
-        sponsoring.forEach(sponsor => {
-          // Only add if it's a user, not an organization
-          if (sponsor.type === 'User') {
-            allSponsoring.add(sponsor.login);
-          }
-        });
-        page++;
-        // Add delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-    } catch (error) {
-      console.error('❌ Error:', error.message);
-      break;
+    if (res.ok) {
+      console.log(`✅ Successfully followed @${username}`);
+      return true;
+    } else {
+      console.error(`❌ Failed to follow @${username}:`, await res.json());
+      return false;
     }
-  }
-
-  const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(`\n✅ Found ${allSponsoring.size} sponsored users in ${totalTime}s`);
-  return Array.from(allSponsoring);
-}
-
-// Add this function after the imports
-function initializeLogFiles() {
-  console.log('\n📋 Initializing log files...');
-  
-  // Create backup directory if it doesn't exist
-  const backupDir = 'log_backups';
-  if (!existsSync(backupDir)) {
-    mkdirSync(backupDir, { recursive: true });
-  }
-
-  // Initialize or restore log files
-  const logFiles = [
-    LOG_FILE,
-    'invited_users.json',
-    'invitation_stats.json',
-    'search_progress.json'
-  ];
-
-  for (const file of logFiles) {
-    // If file doesn't exist, try to restore from backup
-    if (!existsSync(file)) {
-      console.log(`⚠️ ${file} not found, attempting to restore...`);
-      
-      // Try main backup
-      if (existsSync(`${file}.backup`)) {
-        copyFileSync(`${file}.backup`, file);
-        console.log(`✅ Restored ${file} from backup`);
-        continue;
-      }
-      
-      // Try dated backups
-      const backupFiles = readdirSync(backupDir)
-        .filter(f => f.startsWith(basename(file)))
-        .sort()
-        .reverse();
-      
-      if (backupFiles.length > 0) {
-        const latestBackup = join(backupDir, backupFiles[0]);
-        copyFileSync(latestBackup, file);
-        console.log(`✅ Restored ${file} from ${backupFiles[0]}`);
-        continue;
-      }
-      
-      // Create empty file if no backups found
-      writeFileSync(file, '');
-      console.log(`📝 Created new ${file}`);
-    }
-  }
-
-  // Create daily backup with timestamp
-  const timestamp = new Date().toISOString().split('T')[0];
-  for (const file of logFiles) {
-    if (existsSync(file)) {
-      const backupName = `${basename(file)}_${timestamp}`;
-      copyFileSync(file, join(backupDir, backupName));
-    }
-  }
-
-  console.log('✅ Log initialization complete\n');
-}
-
-// Add this function to create periodic backups
-function createPeriodicBackup() {
-  const timestamp = new Date().toISOString().split('T')[0];
-  const backupDir = 'log_backups';
-  
-  if (!existsSync(backupDir)) {
-    mkdirSync(backupDir, { recursive: true });
-  }
-
-  const logFiles = [
-    LOG_FILE,
-    'invited_users.json',
-    'invitation_stats.json',
-    'search_progress.json'
-  ];
-
-  for (const file of logFiles) {
-    if (existsSync(file)) {
-      const backupName = `${basename(file)}_${timestamp}`;
-      copyFileSync(file, join(backupDir, backupName));
-    }
+  } catch (error) {
+    console.error(`❌ Error following @${username}:`, error.message);
+    return false;
   }
 }
 
-// Modify the main function to initialize logs at startup
+async function validateUser(username) {
+  try {
+    const res = await fetch(`https://api.github.com/users/${username}`, { headers });
+    if (res.ok) {
+      const user = await res.json();
+      return {
+        valid: true,
+        isOrg: user.type === 'Organization'
+      };
+    }
+    return { valid: false, isOrg: false };
+  } catch (error) {
+    return { valid: false, isOrg: false };
+  }
+}
+
+// Modify the main function to properly handle return values
 async function main() {
   try {
     console.log('🤖 KHC Invitation Bot');
     console.log('📝 Configuration:');
     console.log('   GitHub Token: ✅ Present');
 
-    // Initialize log files first
-    initializeLogFiles();
-
-    // Create periodic backup
-    createPeriodicBackup();
-
-    // Clean up log file
+    // Clean up log file first
     cleanupLogFile();
 
     // Check last search from log file
@@ -1687,7 +1373,14 @@ async function main() {
       rl.question('Enter your choice (1-9): ', resolve);
     });
 
-    if (answer === '8' || answer === '9') {
+    // Convert answer to number and validate
+    const choice = parseInt(answer);
+    if (isNaN(choice) || choice < 1 || choice > 9) {
+      console.error('❌ Invalid choice. Please enter 1-9.');
+      return false;
+    }
+
+    if (choice === 8 || choice === 9) {
       const userInput = await new Promise(resolve => {
         rl.question('Enter the GitHub profile/organization URL (e.g., https://github.com/username): ', resolve);
       });
@@ -1698,16 +1391,110 @@ async function main() {
         return false;
       }
 
-      console.log(`\n🔍 Processing ${answer === '8' ? 'sponsors' : 'sponsored users'} for @${username}...`);
+      console.log(`\n🔍 Processing ${choice === 8 ? 'sponsors' : 'sponsored users'} for @${username}...`);
       const sourceUsername = username;
-      const followers = answer === '8' ? 
+      const followers = choice === 8 ? 
         await getSponsors(username) : 
         await getSponsoring(username);
 
       return await handleSponsorInvitations(followers, sourceUsername, ORG);
-    } else {
-      console.error('❌ Invalid choice. Please enter 1-9.');
-      return false;
+    }
+
+    // Handle other options
+    switch (choice) {
+      case 1:
+        // Invite followers of a specific user
+        const userInput = await new Promise(resolve => {
+          rl.question('Enter the GitHub username: ', resolve);
+        });
+        
+        if (!userInput) {
+          console.error('❌ No username provided.');
+          return false;
+        }
+
+        const followers = await getFollowers(userInput);
+        return await handleSponsorInvitations(followers, userInput, ORG);
+
+      case 2:
+        // Invite followers of an organization
+        const orgInput = await new Promise(resolve => {
+          rl.question('Enter the GitHub organization name: ', resolve);
+        });
+        
+        if (!orgInput) {
+          console.error('❌ No organization name provided.');
+          return false;
+        }
+
+        const orgFollowers = await getOrgFollowers(orgInput);
+        return await handleSponsorInvitations(orgFollowers, orgInput, ORG);
+
+      case 3:
+        // Invite a single user
+        const singleUser = await new Promise(resolve => {
+          rl.question('Enter the GitHub username or email: ', resolve);
+        });
+        
+        if (!singleUser) {
+          console.error('❌ No username/email provided.');
+          return false;
+        }
+
+        const isValid = await validateUser(singleUser);
+        if (!isValid.valid) {
+          console.error('❌ Invalid GitHub username.');
+          return false;
+        }
+
+        if (isValid.isOrg) {
+          console.error('❌ Cannot invite organizations, only individual users.');
+          return false;
+        }
+
+        return await handleSponsorInvitations([singleUser], 'direct', ORG);
+
+      case 4:
+        // Search and invite users by keyword
+        const keyword = await new Promise(resolve => {
+          rl.question('Enter search keyword: ', resolve);
+        });
+        
+        if (!keyword) {
+          console.error('❌ No keyword provided.');
+          return false;
+        }
+
+        const searchUsers = await searchUsersByKeyword(keyword);
+        return await handleSponsorInvitations(searchUsers, `search-${keyword}`, ORG);
+
+      case 5:
+        // Scan repository/organization contributors
+        const repoUrl = await new Promise(resolve => {
+          rl.question('Enter the GitHub repository URL: ', resolve);
+        });
+        
+        if (!repoUrl) {
+          console.error('❌ No repository URL provided.');
+          return false;
+        }
+
+        const contributors = await getRepoContributors(repoUrl);
+        return await handleSponsorInvitations(contributors, `repo-${repoUrl}`, ORG);
+
+      case 6:
+        // Follow all organization members
+        await followAllOrgMembers();
+        return true;
+
+      case 7:
+        // Scan README files for GitHub users
+        await inviteUsersFromReadme();
+        return true;
+
+      default:
+        console.error('❌ Invalid choice. Please enter 1-9.');
+        return false;
     }
   } catch (error) {
     console.error('❌ An unexpected error occurred:', error.message);
