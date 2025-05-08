@@ -11,3 +11,90 @@
 {"timestamp":"2025-05-08T02:09:50.784Z","type":"SEARCH_RESULTS","message":"Found users","total":0,"new":0}
 {"timestamp":"2025-05-08T02:09:51.042Z","type":"RATE_LIMIT","message":"Current rate limits","core":{"limit":5000,"used":0,"remaining":5000,"reset":1746673790},"search":{"limit":30,"used":2,"remaining":28,"reset":1746670216}}
 {"timestamp":"2025-05-08T02:09:51.047Z","type":"GIT","message":"Pushing log file to GitHub"}
+{"timestamp":"2025-05-08T02:09:51.992Z","type":"GIT","message":"Successfully pushed log file to GitHub"}
+{"timestamp":"2025-05-08T02:11:00.188Z","type":"RATE_LIMIT","message":"Current rate limits","core":{"limit":5000,"used":0,"remaining":5000,"reset":1746673859},"search":{"limit":30,"used":0,"remaining":30,"reset":1746670319}}
+{"timestamp":"2025-05-08T02:11:00.193Z","type":"SEARCH","message":"Searching users with term: repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:00.451Z","type":"RATE_LIMIT","message":"Current rate limits","core":{"limit":5000,"used":0,"remaining":5000,"reset":1746673860},"search":{"limit":30,"used":0,"remaining":30,"reset":1746670320}}
+{"timestamp":"2025-05-08T02:11:01.159Z","type":"SEARCH_RESULTS","message":"Found users","total":100,"new":40}
+{"timestamp":"2025-05-08T02:11:01.160Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: gustavoguanabara","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:01.789Z","type":"INVITE_SUCCESS","message":"Successfully invited gustavoguanabara","userId":8683378,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:03.790Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: peng-zhihui","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:04.545Z","type":"INVITE_SUCCESS","message":"Successfully invited peng-zhihui","userId":12994887,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:06.546Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: IDouble","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:07.189Z","type":"INVITE_SUCCESS","message":"Successfully invited IDouble","userId":18186995,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:09.190Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: kunal-kushwaha","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:09.882Z","type":"INVITE_SUCCESS","message":"Successfully invited kunal-kushwaha","userId":42698533,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:11.883Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: dmalan","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:12.614Z","type":"INVITE_SUCCESS","message":"Successfully invited dmalan","userId":788678,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:14.615Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: WebDevSimplified","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:15.259Z","type":"INVITE_SUCCESS","message":"Successfully invited WebDevSimplified","userId":39717099,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:17.261Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: CodeWithHarry","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:17.942Z","type":"INVITE_SUCCESS","message":"Successfully invited CodeWithHarry","userId":48705673,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:19.946Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: gamemann","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:20.645Z","type":"INVITE_SUCCESS","message":"Successfully invited gamemann","userId":6509565,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:22.647Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: hadley","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:23.606Z","type":"INVITE_SUCCESS","message":"Successfully invited hadley","userId":4196,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:25.606Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: daimajia","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:26.255Z","type":"INVITE_SUCCESS","message":"Successfully invited daimajia","userId":2503423,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:28.257Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: geerlingguy","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:28.930Z","type":"INVITE_SUCCESS","message":"Successfully invited geerlingguy","userId":481677,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:30.932Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: antirez","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:31.599Z","type":"INVITE_SUCCESS","message":"Successfully invited antirez","userId":65632,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:33.600Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: codediodeio","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:34.251Z","type":"INVITE_SUCCESS","message":"Successfully invited codediodeio","userId":10172199,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:36.252Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: keijiro","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:36.889Z","type":"INVITE_SUCCESS","message":"Successfully invited keijiro","userId":343936,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:38.890Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: mli","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:39.569Z","type":"INVITE_SUCCESS","message":"Successfully invited mli","userId":421857,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:41.571Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: cloudwu","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:42.227Z","type":"INVITE_SUCCESS","message":"Successfully invited cloudwu","userId":729648,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:44.229Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: dhh","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:44.886Z","type":"INVITE_SUCCESS","message":"Successfully invited dhh","userId":2741,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:46.888Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: john-smilga","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:47.560Z","type":"INVITE_SUCCESS","message":"Successfully invited john-smilga","userId":42133389,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:49.561Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: angelabauer","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:50.237Z","type":"INVITE_SUCCESS","message":"Successfully invited angelabauer","userId":8798027,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:52.239Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: chrisbanes","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:52.841Z","type":"INVITE_SUCCESS","message":"Successfully invited chrisbanes","userId":227486,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:54.842Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: mattt","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:55.502Z","type":"INVITE_SUCCESS","message":"Successfully invited mattt","userId":7659,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:57.503Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: cumsoft","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:11:58.173Z","type":"INVITE_SUCCESS","message":"Successfully invited cumsoft","userId":97250816,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:00.175Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: octocat","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:00.866Z","type":"INVITE_SUCCESS","message":"Successfully invited octocat","userId":583231,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:02.867Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: peter-kimanzi","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:03.523Z","type":"INVITE_SUCCESS","message":"Successfully invited peter-kimanzi","userId":71552773,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:05.525Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: mitchellh","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:06.165Z","type":"INVITE_SUCCESS","message":"Successfully invited mitchellh","userId":1299,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:08.166Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: esin","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:08.813Z","type":"INVITE_SUCCESS","message":"Successfully invited esin","userId":69767,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:10.815Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: halfrost","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:11.677Z","type":"INVITE_SUCCESS","message":"Successfully invited halfrost","userId":10825609,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:13.678Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: kenjinote","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:14.243Z","type":"INVITE_ERROR","message":"Failed to invite kenjinote","error":"Validation Failed: {\"resource\":\"OrganizationInvitation\",\"code\":\"unprocessable\",\"field\":\"data\",\"message\":\"Invitee is already a part of this organization\"}","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:16.246Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: trekhleb","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:16.887Z","type":"INVITE_SUCCESS","message":"Successfully invited trekhleb","userId":3000285,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:18.889Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: AlexTheAnalyst","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:19.816Z","type":"INVITE_SUCCESS","message":"Successfully invited AlexTheAnalyst","userId":60375692,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:21.817Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: clowwindy","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:22.514Z","type":"INVITE_SUCCESS","message":"Successfully invited clowwindy","userId":1073082,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:24.515Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: AUTOMATIC1111","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:25.160Z","type":"INVITE_SUCCESS","message":"Successfully invited AUTOMATIC1111","userId":20920490,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:27.162Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: jackfrued","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:27.830Z","type":"INVITE_SUCCESS","message":"Successfully invited jackfrued","userId":7474657,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:29.831Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: lifesinger","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:30.511Z","type":"INVITE_SUCCESS","message":"Successfully invited lifesinger","userId":97227,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:32.512Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: stormzhang","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:33.173Z","type":"INVITE_SUCCESS","message":"Successfully invited stormzhang","userId":2267900,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:35.175Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: Ovilia","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:35.837Z","type":"INVITE_SUCCESS","message":"Successfully invited Ovilia","userId":779050,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:37.838Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: ahejlsberg","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:38.487Z","type":"INVITE_SUCCESS","message":"Successfully invited ahejlsberg","userId":4226954,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:40.489Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: josevalim","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:41.139Z","type":"INVITE_SUCCESS","message":"Successfully invited josevalim","userId":9582,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:43.140Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: rauchg","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:43.859Z","type":"INVITE_SUCCESS","message":"Successfully invited rauchg","userId":13041,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:45.861Z","type":"INVITE_ATTEMPT","message":"Attempting to invite user: onevcat","searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:46.517Z","type":"INVITE_SUCCESS","message":"Successfully invited onevcat","userId":1019875,"searchTerm":"repo:kamranahmedse/developer-roadmap type:user"}
+{"timestamp":"2025-05-08T02:12:48.782Z","type":"RATE_LIMIT","message":"Current rate limits","core":{"limit":5000,"used":80,"remaining":4920,"reset":1746673861},"search":{"limit":30,"used":0,"remaining":30,"reset":1746670428}}
+{"timestamp":"2025-05-08T02:12:48.791Z","type":"GIT","message":"Pushing log file to GitHub"}
