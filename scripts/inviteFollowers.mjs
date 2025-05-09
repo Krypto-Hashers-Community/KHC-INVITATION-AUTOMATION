@@ -873,81 +873,26 @@ async function scanReadmeForUsers(repoUrl) {
 }
 
 // Add this function before handleSponsorInvitations
-async function inviteUser(username, sourceUsername, targetOrg, forceInvite = false, teamId = null) {
-  // Check if we can send more invites (unless force invite is enabled)
-  if (!forceInvite && !canSendMoreInvites()) {
-    console.log(`\n⚠️ Daily invitation limit reached. Skipping @${username}`);
-    return false;
-  }
-
+async function commitToGit(message) {
   try {
-    // First check if user exists and get their ID
-    const userId = await getUserId(username);
-    if (!userId) {
-      console.log(`\n❌ Could not find user @${username}`);
-      return false;
-    }
-
-    // Send the invitation
-    console.log(`\n📨 Inviting @${username} to ${targetOrg}${teamId ? ' Support Team' : ''}...`);
-    const inviteData = {
-      invitee_id: userId,
-      role: 'direct_member'
-    };
-
-    // If teamId is provided, add team membership
-    if (teamId) {
-      inviteData.team_ids = [teamId];
-    }
-
-    const res = await fetch(`https://api.github.com/orgs/${targetOrg}/invitations`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(inviteData)
-    });
-
-    if (!res.ok) {
-      const error = await res.json();
-      
-      if (error.message.includes('rate limit')) {
-        console.log('⚠️ Rate limit reached. Please try again later.');
-        failedInvitesCount++;
-        if (failedInvitesCount >= MAX_FAILED_INVITES) {
-          console.log('❌ Too many failed attempts. Stopping invitations.');
-          process.exit(1);
-        }
-        return false;
-      }
-      
-      if (error.message.includes('already invited')) {
-        console.log('⚠️ User was already invited');
-        return false;
-      }
-      
-      console.error('❌ Failed to send invitation:', error.message);
-      return false;
-    }
-
-    // Update stats
-    invitationStats.totalInvites++;
-    invitationStats.last24Hours++;
-    invitationStats.lastInviteTime = Date.now();
-    invitationStats.pendingInvites++;
-    updateStats();
-
-    // Log the invitation
-    const timestamp = new Date().toISOString();
-    appendFileSync(LOG_FILE, `${timestamp} - ${sourceUsername} - ${username}\n`);
-
-    console.log('✅ Invitation sent successfully');
+    // Add all log files
+    execSync('git add invitation_log.txt invitation_stats.json search_progress.json scan_progress.json followed_users.json org_members.json users_data/*', { stdio: 'inherit' });
+    
+    // Commit with the provided message
+    execSync(`git commit -m "${message}"`, { stdio: 'inherit' });
+    
+    // Push to remote
+    execSync('git push', { stdio: 'inherit' });
+    
+    console.log('✅ Successfully committed and pushed changes to GitHub');
     return true;
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('❌ Error committing to Git:', error.message);
     return false;
   }
 }
 
-// Modify the handleSponsorInvitations function
+// Modify handleSponsorInvitations to include automatic commit
 async function handleSponsorInvitations(followers, sourceUsername, targetOrg) {
   if (followers.length === 0) {
     console.log('✨ No users found!');
@@ -1028,6 +973,12 @@ async function handleSponsorInvitations(followers, sourceUsername, targetOrg) {
   console.log(`   • Total invites sent: ${invitationStats.totalInvites}`);
   console.log(`   • Invites in last 24h: ${invitationStats.last24Hours}`);
   console.log(`   • Pending invites: ${invitationStats.pendingInvites}`);
+
+  // Add automatic commit after completion
+  if (successfulInvites > 0) {
+    console.log('\n📝 Committing changes to GitHub...');
+    await commitToGit(`Update invitation logs: ${successfulInvites} new invites to ${targetOrg}`);
+  }
 
   return successfulInvites > 0;
 }
@@ -1275,7 +1226,7 @@ async function inviteUsersFromReadme() {
   }
 }
 
-// Add this function before getSponsors
+// Add this function before handleSponsorInvitations
 function extractGitHubUsername(url) {
   try {
     // Handle both URLs and direct usernames
@@ -1331,175 +1282,178 @@ async function validateUser(username) {
   }
 }
 
-// Modify the main function to properly handle return values
+async function handleSearchInvitations(keyword, targetOrg) {
+  console.log(`\n🔍 Searching for users with keyword: "${keyword}"`);
+  const users = await searchUsersByKeyword(keyword);
+  console.log(`Found ${users.length} users matching "${keyword}"`);
+  await handleSponsorInvitations(users, keyword, targetOrg);
+}
+
 async function main() {
-  try {
-    console.log('🤖 KHC Invitation Bot');
-    console.log('📝 Configuration:');
-    console.log('   GitHub Token: ✅ Present');
+  console.log('\n🤖 KHC Invitation Bot');
+  console.log('📝 Configuration:');
+  console.log(`   GitHub Token: ${GITHUB_TOKEN ? '✅ Present' : '❌ Missing'}`);
 
-    // Clean up log file first
-    cleanupLogFile();
+  // Check for previous search
+  if (existsSync(SEARCH_PROGRESS_FILE)) {
+    const searchData = JSON.parse(readFileSync(SEARCH_PROGRESS_FILE, 'utf8'));
+    const continueSearch = await new Promise(resolve => {
+      rl.question(`\n🔍 Found previous search for: "${searchData.keyword}"\nDo you want to continue with the previous search first? (yes/no): `, resolve);
+    });
 
-    // Check last search from log file
-    const lastSearch = getLastSearchFromLog();
-    
-    if (lastSearch) {
-      console.log(`\n🔍 Found previous search for: "${lastSearch}"`);
-      
-      const checkPrevious = await new Promise(resolve => {
-        rl.question('Do you want to continue with the previous search first? (yes/no): ', resolve);
-      });
-
-      if (checkPrevious.toLowerCase() === 'yes') {
-        const followers = await searchUsersByKeyword(lastSearch);
-        await handleSponsorInvitations(followers, `search-${lastSearch}`, ORG);
-      }
+    if (continueSearch.toLowerCase() === 'yes') {
+      await handleSearchInvitations(searchData.keyword, searchData.targetOrg);
     }
+  }
 
-    // Show main menu options
-    console.log('\nPlease choose an option:');
-    console.log('1. Invite followers of a specific user');
+  while (true) {
+    console.log('\n📋 Available Options:');
+    console.log('1. Invite followers of a user');
     console.log('2. Invite followers of an organization');
-    console.log('3. Invite a single user (by username or email)');
+    console.log('3. Invite a single user');
     console.log('4. Search and invite users by keyword');
     console.log('5. Scan repository/organization contributors');
     console.log('6. Follow all organization members');
     console.log('7. Scan README files for GitHub users');
     console.log('8. Invite sponsors of a user/organization');
     console.log('9. Invite users being sponsored by a user/organization');
+    console.log('10. Exit');
 
-    const answer = await new Promise(resolve => {
-      rl.question('Enter your choice (1-9): ', resolve);
+    const choice = await new Promise(resolve => {
+      rl.question('\nSelect an option (1-10): ', resolve);
     });
 
-    // Convert answer to number and validate
-    const choice = parseInt(answer);
-    if (isNaN(choice) || choice < 1 || choice > 9) {
-      console.error('❌ Invalid choice. Please enter 1-9.');
-      return false;
-    }
-
-    if (choice === 8 || choice === 9) {
-      const userInput = await new Promise(resolve => {
-        rl.question('Enter the GitHub profile/organization URL (e.g., https://github.com/username): ', resolve);
-      });
-
-      const username = extractGitHubUsername(userInput);
-      if (!username) {
-        console.error('❌ Invalid GitHub URL or username');
-        return false;
-      }
-
-      console.log(`\n🔍 Processing ${choice === 8 ? 'sponsors' : 'sponsored users'} for @${username}...`);
-      const sourceUsername = username;
-      const followers = choice === 8 ? 
-        await getSponsors(username) : 
-        await getSponsoring(username);
-
-      return await handleSponsorInvitations(followers, sourceUsername, ORG);
-    }
-
-    // Handle other options
     switch (choice) {
-      case 1:
-        // Invite followers of a specific user
-        const userInput = await new Promise(resolve => {
-          rl.question('Enter the GitHub username: ', resolve);
-        });
-        
-        if (!userInput) {
-          console.error('❌ No username provided.');
-          return false;
-        }
-
-        const followers = await getFollowers(userInput);
-        return await handleSponsorInvitations(followers, userInput, ORG);
-
-      case 2:
-        // Invite followers of an organization
-        const orgInput = await new Promise(resolve => {
-          rl.question('Enter the GitHub organization name: ', resolve);
-        });
-        
-        if (!orgInput) {
-          console.error('❌ No organization name provided.');
-          return false;
-        }
-
-        const orgFollowers = await getOrgFollowers(orgInput);
-        return await handleSponsorInvitations(orgFollowers, orgInput, ORG);
-
-      case 3:
-        // Invite a single user
-        const singleUser = await new Promise(resolve => {
-          rl.question('Enter the GitHub username or email: ', resolve);
-        });
-        
-        if (!singleUser) {
-          console.error('❌ No username/email provided.');
-          return false;
-        }
-
-        const isValid = await validateUser(singleUser);
-        if (!isValid.valid) {
-          console.error('❌ Invalid GitHub username.');
-          return false;
-        }
-
-        if (isValid.isOrg) {
-          console.error('❌ Cannot invite organizations, only individual users.');
-          return false;
-        }
-
-        return await handleSponsorInvitations([singleUser], 'direct', ORG);
-
-      case 4:
-        // Search and invite users by keyword
-        const keyword = await new Promise(resolve => {
-          rl.question('Enter search keyword: ', resolve);
-        });
-        
-        if (!keyword) {
-          console.error('❌ No keyword provided.');
-          return false;
-        }
-
-        const searchUsers = await searchUsersByKeyword(keyword);
-        return await handleSponsorInvitations(searchUsers, `search-${keyword}`, ORG);
-
-      case 5:
-        // Scan repository/organization contributors
-        const repoUrl = await new Promise(resolve => {
-          rl.question('Enter the GitHub repository URL: ', resolve);
-        });
-        
-        if (!repoUrl) {
-          console.error('❌ No repository URL provided.');
-          return false;
-        }
-
-        const contributors = await getRepoContributors(repoUrl);
-        return await handleSponsorInvitations(contributors, `repo-${repoUrl}`, ORG);
-
-      case 6:
-        // Follow all organization members
-        await followAllOrgMembers();
-        return true;
-
-      case 7:
-        // Scan README files for GitHub users
-        await inviteUsersFromReadme();
-        return true;
-
+      case '1':
+        await handleUserFollowers();
+        break;
+      case '2':
+        await handleOrgFollowers();
+        break;
+      case '3':
+        await handleSingleUser();
+        break;
+      case '4':
+        await handleSearch();
+        break;
+      case '5':
+        await handleContributors();
+        break;
+      case '6':
+        await handleFollowOrgMembers();
+        break;
+      case '7':
+        await handleReadmeScan();
+        break;
+      case '8':
+        await handleSponsors();
+        break;
+      case '9':
+        await handleSponsoredUsers();
+        break;
+      case '10':
+        console.log('\n👋 Goodbye!');
+        rl.close();
+        return;
       default:
-        console.error('❌ Invalid choice. Please enter 1-9.');
-        return false;
+        console.log('❌ Invalid option. Please try again.');
     }
-  } catch (error) {
-    console.error('❌ An unexpected error occurred:', error.message);
-    return false;
   }
+}
+
+// Add new handler functions
+async function handleUserFollowers() {
+  const username = await new Promise(resolve => {
+    rl.question('\nEnter the username to get followers from: ', resolve);
+  });
+  const targetOrg = await new Promise(resolve => {
+    rl.question('Enter the target organization name: ', resolve);
+  });
+  const followers = await getFollowers(username);
+  await handleSponsorInvitations(followers, username, targetOrg);
+}
+
+async function handleOrgFollowers() {
+  const orgName = await new Promise(resolve => {
+    rl.question('\nEnter the organization name to get followers from: ', resolve);
+  });
+  const targetOrg = await new Promise(resolve => {
+    rl.question('Enter the target organization name: ', resolve);
+  });
+  const followers = await getOrgFollowers(orgName);
+  await handleSponsorInvitations(followers, orgName, targetOrg);
+}
+
+async function handleSingleUser() {
+  const username = await new Promise(resolve => {
+    rl.question('\nEnter the username to invite: ', resolve);
+  });
+  const targetOrg = await new Promise(resolve => {
+    rl.question('Enter the target organization name: ', resolve);
+  });
+  await handleSponsorInvitations([username], username, targetOrg);
+}
+
+async function handleContributors() {
+  const repoUrl = await new Promise(resolve => {
+    rl.question('\nEnter the repository URL (e.g., https://github.com/username/repo): ', resolve);
+  });
+  const targetOrg = await new Promise(resolve => {
+    rl.question('Enter the target organization name: ', resolve);
+  });
+  const contributors = await getRepoContributors(repoUrl);
+  await handleSponsorInvitations(contributors, repoUrl, targetOrg);
+}
+
+async function handleFollowOrgMembers() {
+  const orgName = await new Promise(resolve => {
+    rl.question('\nEnter the organization name to follow members from: ', resolve);
+  });
+  const members = await getOrgMembers(orgName);
+  console.log(`\nFound ${members.length} members in ${orgName}`);
+  const confirm = await new Promise(resolve => {
+    rl.question('Do you want to follow all members? (yes/no): ', resolve);
+  });
+  if (confirm.toLowerCase() === 'yes') {
+    for (const member of members) {
+      await followUser(member);
+      await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_INVITES));
+    }
+    console.log('✨ All members followed successfully!');
+  }
+}
+
+async function handleReadmeScan() {
+  const repoUrl = await new Promise(resolve => {
+    rl.question('\nEnter the repository URL to scan README files: ', resolve);
+  });
+  const targetOrg = await new Promise(resolve => {
+    rl.question('Enter the target organization name: ', resolve);
+  });
+  const users = await scanReadmeForUsers(repoUrl);
+  await handleSponsorInvitations(users, repoUrl, targetOrg);
+}
+
+async function handleSponsors() {
+  const username = await new Promise(resolve => {
+    rl.question('\nEnter the username/organization to get sponsors from: ', resolve);
+  });
+  const targetOrg = await new Promise(resolve => {
+    rl.question('Enter the target organization name: ', resolve);
+  });
+  const sponsors = await getSponsors(username);
+  await handleSponsorInvitations(sponsors, username, targetOrg);
+}
+
+async function handleSponsoredUsers() {
+  const username = await new Promise(resolve => {
+    rl.question('\nEnter the username/organization to get sponsored users from: ', resolve);
+  });
+  const targetOrg = await new Promise(resolve => {
+    rl.question('Enter the target organization name: ', resolve);
+  });
+  const sponsoredUsers = await getSponsoredUsers(username);
+  await handleSponsorInvitations(sponsoredUsers, username, targetOrg);
 }
 
 // Start the application
